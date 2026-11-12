@@ -1,0 +1,43 @@
+{
+  "title": "Profile",
+  "loading": "Loading profile",
+  "unknownName": "No name set",
+  "notifications": "Notifications",
+  "logout": "Sign out",
+  "appearance": {
+    "theme": {
+      "title": "Theme",
+      "system": "System",
+      "dark": "Dark",
+      "light": "Light"
+    },
+    "language": {
+      "title": "Interface language",
+      "english": "English",
+      "russian": "Русский",
+      "loading": "Loading translation…",
+      "failed": "Could not load the translation."
+    }
+  },
+  "edit": {
+    "action": "Edit",
+    "changePhoto": "Change photo",
+    "preparingPhoto": "Preparing photo…",
+    "removePhoto": "Remove photo",
+    "name": "Name",
+    "save": "Save changes",
+    "saving": "Saving…",
+    "check": "Check",
+    "checking": "Checking…",
+    "openFailed": "Could not open the editor.",
+    "errors": {
+      "invalid": "Check the name and selected photo.",
+      "busy": "Wait for the current operation to finish.",
+      "permission": "The server did not allow the profile update.",
+      "tooLarge": "The changes exceed the request size limit.",
+      "limitsUnavailable": "Could not get the server request size limit.",
+      "server": "Could not save the profile.",
+      "unknown": "Could not confirm that the profile was saved."
+    }
+  }
+}

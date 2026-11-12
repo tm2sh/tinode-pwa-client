@@ -1,0 +1,87 @@
+{
+  "title": "Chats",
+  "search": {
+    "open": "Search chats",
+    "close": "Close search",
+    "placeholder": "Search chats",
+    "empty": "No matching chats"
+  },
+  "actions": {
+    "label": "Actions for “{{title}}”",
+    "enableNotifications": "Enable notifications",
+    "disableNotifications": "Disable notifications",
+    "delete": "Delete",
+    "confirmGroupDeletion": "The group and its history will be deleted for all members.",
+    "confirmChannelDeletion": "The channel and its history will be deleted for all subscribers.",
+    "deleteForAll": "Delete for everyone",
+    "leave": "Leave group",
+    "unsubscribe": "Unsubscribe from channel",
+    "checking": "Checking available actions…",
+    "unavailable": "Some actions are unavailable"
+  },
+  "openCreation": "Chats — open chat creation",
+  "openProfile": "Open profile",
+  "signedIn": "Signed in",
+  "notAvailable": "Conversations are not available yet.",
+  "fallback": {
+    "personal": "Direct chat",
+    "group": "Group",
+    "profile": "My profile"
+  },
+  "kind": {
+    "personal": "Direct chat",
+    "group": "Group chat"
+  },
+  "sender": {
+    "self": "You",
+    "unknown": "Unknown sender"
+  },
+  "preview": {
+    "draft": "Draft",
+    "loading": "Loading the latest message…",
+    "noMessages": "No messages",
+    "noAvailableMessages": "No available messages",
+    "photo": "Photo",
+    "voice": "Voice message",
+    "video": "Video",
+    "file": "File",
+    "unsupported": "Unsupported message",
+    "withCaption": "{{type}}: {{caption}}",
+    "withSender": "{{sender}}: {{message}}",
+    "lastKnown": "Last known message: {{message}}",
+    "loadingLastKnown": "Updating the latest message… Last known: {{message}}"
+  },
+  "unread": {
+    "none": "No unread messages",
+    "unknown": "Unread message count is unknown",
+    "unknownBadge": "?",
+    "count": "{{value}} unread messages",
+    "count_one": "{{value}} unread message",
+    "count_few": "{{value}} unread messages",
+    "count_many": "{{value}} unread messages",
+    "count_other": "{{value}} unread messages"
+  },
+  "state": {
+    "loading": "Loading chats",
+    "empty": "No chats yet",
+    "failed": "Could not load chats",
+    "closed": "Chat list closed",
+    "refreshing": "Refreshing chats…",
+    "refreshFailed": "Could not refresh chats. Previously loaded data is shown."
+  },
+  "a11y": {
+    "notificationsMuted": "Notifications muted",
+    "list": "Chat list",
+    "card": "{{type}} “{{title}}”. {{preview}}\n{{time}}. {{unread}}",
+    "timeUnknown": "Latest message time is unknown",
+    "lastActivity": "Latest message: {{dateTime}}",
+    "lastKnownActivity": "Last known message time: {{dateTime}}",
+    "avatar": "Avatar: {{title}}",
+    "avatarLoading": "Avatar loading: {{title}}",
+    "avatarMissing": "No avatar set: {{title}}",
+    "avatarUnavailable": "Avatar unavailable: {{title}}",
+    "previewWithWarning": "{{preview}}\n{{warning}}",
+    "cardUnknown": "{{type}}. {{preview}}\n{{time}}. {{unread}}",
+    "mentioned": "You were mentioned in the latest unread message"
+  }
+}

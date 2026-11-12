@@ -1,0 +1,8 @@
+.registration-actions {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.registration-actions > .auth-submit { margin-top: 0; }
+.registration-form .auth-field > label { overflow-wrap: anywhere; }

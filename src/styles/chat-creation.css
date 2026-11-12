@@ -1,0 +1,27 @@
+@import './settings.css';
+@import './spinner.css';
+
+.settings-list-row.chat-creation-row {
+  display: grid;
+  align-items: stretch;
+  padding: 0;
+}
+
+.chat-creation-action {
+  padding: 12px 0;
+  border: 0;
+  background: none;
+  color: var(--settings-ink);
+  text-align: start;
+  font-size: 16px;
+}
+
+.chats-screen .chat-creation-action:disabled { cursor: default; }
+
+.settings-list + .chat-creation-contacts { margin-top: 28px; }
+.chat-creation-contacts-note { margin: 0 17px; color: var(--settings-muted); font-size: 14px; }
+.chat-creation-contacts-note + .settings-list { margin-top: 16px; }
+
+.chat-creation-feedback { display: flex; align-items: center; gap: 8px; margin: 0 17px 12px; color: var(--settings-muted); font-size: 14px; }
+.chat-creation-feedback .auth-spinner { flex: none; }
+.chat-creation-feedback.is-error { color: light-dark(#a32e48, #ffb4c3); }

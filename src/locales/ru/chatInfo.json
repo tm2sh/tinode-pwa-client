@@ -1,0 +1,50 @@
+{
+  "title": "О чате",
+  "loading": "Загружаем сведения",
+  "refreshing": "Обновляем сведения",
+  "closed": "Сведения о чате недоступны",
+  "presence": {
+    "online": "В сети",
+    "offline": "Не в сети",
+    "unknown": "Статус недоступен",
+    "lastSeen": "Был(а) в сети {{dateTime}}"
+  },
+  "mute": {
+    "label": "Без уведомлений"
+  },
+  "edit": {
+    "action": "Изменить",
+    "groupName": "Название группы",
+    "changePhoto": "Изменить фото",
+    "preparingPhoto": "Подготавливаем фото",
+    "save": "Сохранить",
+    "saving": "Сохраняем",
+    "check": "Проверить сохранение",
+    "checking": "Проверяем"
+  },
+  "members": {
+    "title": "Участники",
+    "owner": "Владелец",
+    "unknownName": "Участник",
+    "removeLabel": "Удалить участника: {{name}}",
+    "addLabel": "Добавить участника",
+    "addAction": "Добавить",
+    "adding": "Добавляем участников…",
+    "addIncomplete": "Не удалось добавить всех участников. Повторите для оставшихся.",
+    "removeConfirm": "Вы действительно хотите удалить «{{name}}»?",
+    "removeAction": "Удалить",
+    "removing": "Удаляем…",
+    "empty": "Участников нет",
+    "loading": "Загружаем участников",
+    "partial": "Показана часть участников",
+    "partialCount": "Показано {{shown}} из {{total}} участников",
+    "unsupported": "Список участников этого канала недоступен",
+    "channelTitle": "Участники канала",
+    "noneAvailable": "Нет доступных участников"
+  },
+  "channel": "Канал",
+  "subscribers_one": "{{value}} подписчик",
+  "subscribers_few": "{{value}} подписчика",
+  "subscribers_many": "{{value}} подписчиков",
+  "subscribers_other": "{{value}} подписчика"
+}

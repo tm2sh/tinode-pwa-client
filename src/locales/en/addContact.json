@@ -1,0 +1,14 @@
+{
+  "title": "Add contact",
+  "placeholder": "@alias or login",
+  "search": "Find a contact",
+  "searching": "Searching for a contact…",
+  "empty": "Contact not found",
+  "invalidQuery": "Enter the full alias or login",
+  "searchFailed": "Could not search for the contact",
+  "retry": "Retry",
+  "unnamed": "Unnamed",
+  "openingChat": "Opening chat…",
+  "openChatFailed": "Could not open the chat. Select the contact again.",
+  "openChatUnconfirmed": "Could not confirm the connection to the chat. Reload the page and try again."
+}

@@ -1,0 +1,51 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import type { Plugin } from 'vite';
+import { languageStorageKey, readStartupLanguage } from '../src/i18n/language-preference.ts';
+import { applyThemePreference, readStoredTheme, themeStorageKey } from '../src/app/theme-preference.ts';
+
+function attribute(value: string): string {
+  return value.replaceAll('&', '&amp;').replaceAll('"', '&quot;')
+    .replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll("'", '&#39;');
+}
+
+export function bootstrapShellPlugin(language: 'ru' | 'en'): Plugin {
+  let root = '';
+  return {
+    name: 'tinode-bootstrap-shell',
+    configResolved(config) { root = config.root; },
+    transformIndexHtml: {
+      order: 'pre',
+      handler(html) {
+        const loadingLabel = (locale: 'ru' | 'en'): string => {
+          const { loadingApplication } = JSON.parse(readFileSync(resolve(root, 'src/locales', locale, 'common.json'), 'utf8'));
+          if (typeof loadingApplication !== 'string' || !loadingApplication.trim()) {
+            throw new Error('Bootstrap loading translation is missing.');
+          }
+          return loadingApplication;
+        };
+        const labels = { ru: loadingLabel('ru'), en: loadingLabel('en') };
+        // Render the startup spinner from the shared SVG before network requests.
+        const icons = readFileSync(resolve(root, 'src/assets/ui-icons.svg'), 'utf8');
+        const spinner = icons.match(/<symbol id="spinner" viewBox="0 0 24 24">([\s\S]*?)<\/symbol>/)?.[1].trim();
+        if (!spinner) throw new Error('Bootstrap spinner symbol is missing.');
+        // Make the initial background and spinner styles available before loading modules.
+        const styles = readFileSync(resolve(root, 'src/styles/app.css'), 'utf8') + '\n' +
+          readFileSync(resolve(root, 'src/styles/spinner.css'), 'utf8') + '\n' +
+          readFileSync(resolve(root, 'src/styles/loading-screen.css'), 'utf8');
+        const theme = '(' + applyThemePreference.toString() + ')((' + readStoredTheme.toString() + ')(' +
+          JSON.stringify(themeStorageKey) + '));';
+        const startupLanguage = 'document.documentElement.lang = (' + readStartupLanguage.toString() + ')(' +
+          JSON.stringify(languageStorageKey) + ');';
+        const label = 'document.getElementById("bootstrap-screen").setAttribute("aria-label", ' +
+          JSON.stringify(labels).replaceAll('<', '\\u003c') + '[document.documentElement.lang]);';
+        return html.replace('%BOOTSTRAP_THEME%', () => theme)
+          .replace('%BOOTSTRAP_LANGUAGE%', () => startupLanguage)
+          .replace('%BOOTSTRAP_LOADING_LANGUAGE%', () => label)
+          .replace('%BOOTSTRAP_STYLES%', styles)
+          .replace('%BOOTSTRAP_SPINNER%', spinner)
+          .replace('%BOOTSTRAP_LOADING_LABEL%', attribute(labels[language]));
+      },
+    },
+  };
+}

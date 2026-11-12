@@ -1,0 +1,133 @@
+{
+  "back": "Back",
+  "search": "Search in chat",
+  "messageActions": {
+    "label": "Message actions",
+    "copy": "Copy",
+    "copyLink": "Copy link",
+    "chooseLink": "Choose a link",
+    "textCopied": "Text copied",
+    "linkCopied": "Link copied",
+    "copyFailed": "Could not copy. Try again.",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleteSelf": "Delete for me",
+    "deleteAll": "Delete for everyone",
+    "deleting": "Deleting message…",
+    "deletedSelf": "Message deleted for you",
+    "deleted": "Message deleted",
+    "deleteFailed": "Could not delete the message",
+    "deleteUnknown": "Could not confirm deletion",
+    "checkDeletion": "Check deletion"
+  },
+  "searchPanel": {
+    "input": "Search text",
+    "placeholder": "Search in chat",
+    "noMatches": "No matches in loaded messages",
+    "position": "Message {{current}} of {{total}}",
+    "close": "Close search",
+    "previous": "Previous match",
+    "next": "Next match"
+  },
+  "message": "Message",
+  "files": "Add a photo or file",
+  "voice": "Record a voice message",
+  "fallback": {
+    "group": "Group chat",
+    "personal": "Direct chat",
+    "sender": "Unknown sender",
+    "peer": "Contact",
+    "self": "You"
+  },
+  "state": {
+    "loading": "Loading messages",
+    "empty": "There are no available messages in this chat yet",
+    "failed": "Could not open chat",
+    "suspended": "Chat connection interrupted",
+    "closed": "Chat closed",
+    "reconnect": "Restore connection"
+  },
+  "history": {
+    "older": "Load earlier messages",
+    "loading": "Loading history",
+    "failed": "Could not load history",
+    "retry": "Retry loading history",
+    "gap": "Load this part of the history"
+  },
+  "time": {
+    "unknown": "Time unknown",
+    "unknownDate": "Date unknown",
+    "edited": "Edited {{when}}",
+    "sent": "Sent",
+    "read": "Read"
+  },
+  "attachment": {
+    "photo": "Photo",
+    "voice": "Voice message",
+    "video": "Video",
+    "file": "File",
+    "form": "Interactive message",
+    "unknown": "Unsupported attachment",
+    "later": "Viewing will be added in later steps",
+    "voiceLater": "Playback will be added in later steps",
+    "duration": "Duration: {{duration}}",
+    "empty": "Message without text",
+    "unsupported": "This attachment type is not supported yet"
+  },
+  "a11y": {
+    "screen": "Chat",
+    "messages": "Loaded messages",
+    "message": "{{author}}. {{time}}",
+    "controls": "Chat actions"
+  },
+  "latest": {
+    "go": "Go to the last read message",
+    "loading": "Loading the last read message",
+    "retry": "Retry going to the last read message",
+    "counterMore": "{{value}}+",
+    "newMessages_one": "Go to the last read message. {{value}} new unread message",
+    "newMessages_few": "Go to the last read message. {{value}} new unread messages",
+    "newMessages_many": "Go to the last read message. {{value}} new unread messages",
+    "newMessages_other": "Go to the last read message. {{value}} new unread messages"
+  },
+  "composer": {
+    "editing": "Editing",
+    "cancelEdit": "Cancel editing",
+    "saveEdit": "Save changes",
+    "editStale": "The message changed. Open it for editing again.",
+    "editSaving": "Saving changes…",
+    "editUnknown": "Could not confirm the edit was saved.",
+    "checkEdit": "Check save status",
+    "send": "Send message",
+    "pending": "Sending",
+    "confirmed": "Sent",
+    "unavailableActions": "Voice messages are not available yet.",
+    "retry": "Retry sending message",
+    "check": "Check sending status",
+    "checking": "Checking sending status",
+    "checkAgain": "Check again",
+    "notConfirmed": "Sending is still unconfirmed"
+  },
+  "header": {
+    "notificationsMuted": "Notifications muted",
+    "group": "Group chat",
+    "personal": "Direct chat",
+    "online": "Online",
+    "offline": "Offline",
+    "lastSeen": "Last seen {{dateTime}}",
+    "members_one": "{{value}} participant",
+    "members_few": "{{value}} participants",
+    "members_many": "{{value}} participants",
+    "members_other": "{{value}} participants",
+    "membersOnline_one": "{{value}} participant · online: {{online}}",
+    "membersOnline_few": "{{value}} participants · online: {{online}}",
+    "membersOnline_many": "{{value}} participants · online: {{online}}",
+    "membersOnline_other": "{{value}} participants · online: {{online}}",
+    "openInfo": "Chat info: {{name}}",
+    "channel": "Channel",
+    "subscribers_one": "{{value}} subscriber",
+    "subscribers_few": "{{value}} subscribers",
+    "subscribers_many": "{{value}} subscribers",
+    "subscribers_other": "{{value}} subscribers"
+  }
+}

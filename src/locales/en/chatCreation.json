@@ -1,0 +1,18 @@
+{
+  "title": "Chat creation",
+  "findContact": "Find a contact",
+  "clearSearch": "Close search",
+  "addContact": "Add contact",
+  "createGroup": "Create group",
+  "createChannel": "Create channel",
+  "openingChat": "Opening chat…",
+  "openChatFailed": "Could not open the chat. Select the contact again.",
+  "openChatUnconfirmed": "Could not confirm the connection to the chat. Reload the page and try again.",
+  "contacts": {
+    "title": "Contacts",
+    "empty": "No contacts yet",
+    "notFound": "Contact not found",
+    "loading": "Loading contacts…",
+    "unavailable": "Could not load contacts"
+  }
+}

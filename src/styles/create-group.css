@@ -1,0 +1,47 @@
+@import './settings.css';
+@import './spinner.css';
+
+.group-create-screen .settings-header { margin: 0 calc(var(--chat-header-gutter) - var(--chats-content-gutter)) 20px; }
+.participant-picker .settings-header {
+  grid-template-columns: minmax(58px, 1fr) minmax(0, auto) minmax(max-content, 1fr);
+}
+@media (max-width: 300px) {
+  .participant-picker .settings-header h1 { font-size: 18px; }
+}
+.group-create-screen .settings-header button:disabled { opacity: .55; cursor: default; }
+.group-create-screen .header-search-field { margin-bottom: 16px; }
+.group-create-editor { margin: 0 auto 20px; }
+.group-create-note { margin: 0 17px 14px; color: var(--settings-muted); font-size: 14px; }
+.group-create-progress { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 16px; }
+.group-create-result { width: min(100%, 340px); display: grid; gap: 8px; margin: 16px auto 0; }
+.group-create-picker-feedback { margin: 0 auto 14px; }
+.group-create-issues { color: var(--settings-muted); font-size: 14px; padding-inline-start: 22px; margin: 8px 0; }
+
+.settings-person-choice { cursor: pointer; }
+.settings-person-choice:has(input:disabled) { cursor: default; }
+.settings-person-check { position: relative; display: grid; place-items: center; }
+.settings-person-check input {
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  border: 1px solid var(--settings-muted);
+  border-radius: 50%;
+  cursor: inherit;
+}
+.settings-person-check input:checked { border-color: var(--settings-accent); background: var(--settings-accent); }
+.settings-person-check input:disabled { opacity: .5; }
+.settings-person-check svg {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  color: light-dark(white, #19273b);
+  stroke: currentColor;
+  stroke-width: 2;
+  pointer-events: none;
+  visibility: hidden;
+}
+.settings-person-check input:checked + svg { visibility: visible; }
+@media (hover: hover) and (pointer: fine) {
+  .settings-person-check input:focus-visible { outline: 2px solid var(--settings-accent); outline-offset: 3px; }
+}

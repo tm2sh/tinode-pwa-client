@@ -1,0 +1,16 @@
+{
+  "loadingScreen": "Loading screen",
+  "checkingSession": "Checking sign-in",
+  "applicationState": "Application status",
+  "backToLogin": "Back to sign in",
+  "retry": "Retry",
+  "reload": "Reload app",
+  "screenLoadFailed": "Could not load this screen. Check your connection and reload the app.",
+  "translationsLoadFailed": "Could not load translations. Check your connection and reload the app.",
+  "backToChats": "Back to chats",
+  "appDescription": "Tinode messaging PWA client",
+  "loadingApplication": "Loading application…",
+  "back": "Back",
+  "cancel": "Cancel",
+  "panelLoadFailed": "Could not load this screen. Check your connection and try again."
+}

@@ -1,0 +1,9 @@
+.chat-avatar {
+  display: grid; place-items: center; width: 100%; height: 100%;
+  border-radius: 50%; overflow: hidden;
+  background: linear-gradient(145deg, #9abffa, #7b9be8 50%, #ad9ad9);
+  color: #fff; font-size: 17px; font-weight: 600; line-height: 1;
+  box-shadow: inset 0 2px 4px #ffffff66;
+}
+.chat-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.chats-profile-button .chat-avatar { font-size: 23px; }

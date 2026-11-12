@@ -1,0 +1,87 @@
+{
+  "title": "Чаты",
+  "search": {
+    "open": "Поиск чатов",
+    "close": "Закрыть поиск",
+    "placeholder": "Искать чаты",
+    "empty": "Нет подходящих чатов"
+  },
+  "actions": {
+    "label": "Действия с чатом «{{title}}»",
+    "enableNotifications": "Включить уведомления",
+    "disableNotifications": "Отключить уведомления",
+    "delete": "Удалить",
+    "confirmGroupDeletion": "Группа и её история будут удалены для всех участников.",
+    "confirmChannelDeletion": "Канал и его история будут удалены для всех подписчиков.",
+    "deleteForAll": "Удалить для всех",
+    "leave": "Выйти из группы",
+    "unsubscribe": "Отписаться от канала",
+    "checking": "Уточняем доступные действия…",
+    "unavailable": "Часть действий недоступна"
+  },
+  "openCreation": "Чаты — открыть создание чатов",
+  "openProfile": "Открыть профиль",
+  "signedIn": "Вход выполнен",
+  "notAvailable": "Просмотр переписок пока недоступен.",
+  "fallback": {
+    "personal": "Личный чат",
+    "group": "Группа",
+    "profile": "Мой профиль"
+  },
+  "kind": {
+    "personal": "Личный чат",
+    "group": "Групповой чат"
+  },
+  "sender": {
+    "self": "Вы",
+    "unknown": "Неизвестный отправитель"
+  },
+  "preview": {
+    "draft": "Черновик",
+    "loading": "Загружаем последнее сообщение…",
+    "noMessages": "Нет сообщений",
+    "noAvailableMessages": "Нет доступных сообщений",
+    "photo": "Фото",
+    "voice": "Голосовое сообщение",
+    "video": "Видео",
+    "file": "Файл",
+    "unsupported": "Неподдерживаемое сообщение",
+    "withCaption": "{{type}}: {{caption}}",
+    "withSender": "{{sender}}: {{message}}",
+    "lastKnown": "Последнее известное сообщение: {{message}}",
+    "loadingLastKnown": "Обновляем последнее сообщение… Последнее известное: {{message}}"
+  },
+  "unread": {
+    "none": "Нет непрочитанных сообщений",
+    "unknown": "Количество непрочитанных сообщений неизвестно",
+    "unknownBadge": "?",
+    "count": "{{value}} непрочитанных сообщений",
+    "count_one": "{{value}} непрочитанное сообщение",
+    "count_few": "{{value}} непрочитанных сообщения",
+    "count_many": "{{value}} непрочитанных сообщений",
+    "count_other": "{{value}} непрочитанных сообщений"
+  },
+  "state": {
+    "loading": "Загружаем чаты",
+    "empty": "Пока нет чатов",
+    "failed": "Не удалось загрузить чаты",
+    "closed": "Список чатов закрыт",
+    "refreshing": "Обновляем чаты…",
+    "refreshFailed": "Не удалось обновить чаты. Показаны ранее загруженные данные."
+  },
+  "a11y": {
+    "notificationsMuted": "Уведомления отключены",
+    "list": "Список чатов",
+    "card": "{{type}} «{{title}}». {{preview}}\n{{time}}. {{unread}}",
+    "timeUnknown": "Время последнего сообщения неизвестно",
+    "lastActivity": "Последнее сообщение: {{dateTime}}",
+    "lastKnownActivity": "Время последнего известного сообщения: {{dateTime}}",
+    "avatar": "Аватарка: {{title}}",
+    "avatarLoading": "Аватарка загружается: {{title}}",
+    "avatarMissing": "Аватарка не задана: {{title}}",
+    "avatarUnavailable": "Аватарка недоступна: {{title}}",
+    "previewWithWarning": "{{preview}}\n{{warning}}",
+    "cardUnknown": "{{type}}. {{preview}}\n{{time}}. {{unread}}",
+    "mentioned": "Вас упомянули в последнем непрочитанном сообщении"
+  }
+}

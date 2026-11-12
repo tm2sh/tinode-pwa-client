@@ -1,0 +1,50 @@
+{
+  "title": "Chat info",
+  "loading": "Loading chat details",
+  "refreshing": "Updating chat details",
+  "closed": "Chat details are unavailable",
+  "presence": {
+    "online": "Online",
+    "offline": "Offline",
+    "unknown": "Status unavailable",
+    "lastSeen": "Last seen {{dateTime}}"
+  },
+  "mute": {
+    "label": "Mute notifications"
+  },
+  "edit": {
+    "action": "Edit",
+    "groupName": "Group name",
+    "changePhoto": "Change photo",
+    "preparingPhoto": "Preparing photo",
+    "save": "Save",
+    "saving": "Saving",
+    "check": "Check save status",
+    "checking": "Checking"
+  },
+  "members": {
+    "title": "Members",
+    "owner": "Owner",
+    "unknownName": "Member",
+    "removeLabel": "Remove member: {{name}}",
+    "addLabel": "Add member",
+    "addAction": "Add",
+    "adding": "Adding members…",
+    "addIncomplete": "Some members could not be added. Try again for the remaining contacts.",
+    "removeConfirm": "Are you sure you want to remove “{{name}}”?",
+    "removeAction": "Remove",
+    "removing": "Removing…",
+    "empty": "No members",
+    "loading": "Loading members",
+    "partial": "Some members are shown",
+    "partialCount": "Showing {{shown}} of {{total}} members",
+    "unsupported": "This channel’s member list is unavailable",
+    "channelTitle": "Channel members",
+    "noneAvailable": "No available members"
+  },
+  "channel": "Channel",
+  "subscribers_one": "{{value}} subscriber",
+  "subscribers_few": "{{value}} subscribers",
+  "subscribers_many": "{{value}} subscribers",
+  "subscribers_other": "{{value}} subscribers"
+}

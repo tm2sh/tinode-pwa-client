@@ -1,0 +1,49 @@
+{
+  "title": "Group",
+  "next": "Next",
+  "create": "Create",
+  "find": "Find a member",
+  "noMatches": "No people found",
+  "noContacts": "No contacts yet",
+  "contactsLoading": "Loading contacts…",
+  "contactsUnavailable": "Could not load contacts",
+  "limitReached": "Member limit reached",
+  "name": "Group name",
+  "choosePhoto": "Choose photo",
+  "preparingPhoto": "Preparing photo…",
+  "removePhoto": "Remove photo",
+  "working": "Creating group…",
+  "unconfirmed": "Could not confirm group creation. Check the result or return to your chats.",
+  "check": "Check result",
+  "invitesIncomplete": "The group was created. Some people could not be added.",
+  "openFailed": "The group was created. Could not open the chat.",
+  "retry": "Retry invitations",
+  "open": "Open chat",
+  "invite": {
+    "rejected": "Could not add",
+    "unknown": "Could not confirm"
+  },
+  "errors": {
+    "invalid": "Check the group name and member list",
+    "tooLarge": "The name or photo exceeds the server limit",
+    "denied": "The server rejected group creation",
+    "limit": "The group member limit was exceeded",
+    "unavailable": "Could not create the group"
+  },
+  "channel": {
+    "title": "Channel",
+    "name": "Channel name",
+    "working": "Creating channel…",
+    "unconfirmed": "Could not confirm channel creation. Check the result or return to your chats.",
+    "invitesIncomplete": "The channel was created. Some people could not be added.",
+    "openFailed": "The channel was created. Could not open the conversation.",
+    "open": "Open channel",
+    "errors": {
+      "invalid": "Check the channel name and member list",
+      "tooLarge": "The name or photo exceeds the server limit",
+      "denied": "The server rejected channel creation",
+      "limit": "The channel member limit was exceeded",
+      "unavailable": "Could not create the channel"
+    }
+  }
+}

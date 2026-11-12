@@ -1,0 +1,24 @@
+@import './settings.css';
+@import './spinner.css';
+
+.add-contact-screen .chats-header .header-search-field { grid-column: 2; }
+
+.add-contact-feedback {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 17px 12px;
+  color: var(--settings-muted);
+  font-size: 14px;
+}
+.add-contact-feedback .auth-spinner { flex: none; }
+.add-contact-feedback.is-error { color: light-dark(#a32e48, #ffb4c3); }
+.add-contact-feedback button {
+  border: 0;
+  background: none;
+  padding: 8px;
+  color: var(--conversation-accent, light-dark(#087af5, #8ac4ff));
+  font: inherit;
+  font-weight: 600;
+}

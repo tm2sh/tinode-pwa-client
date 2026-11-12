@@ -1,0 +1,17 @@
+:root[data-auth-standalone='true'] .app-shell { height: 100vh; }
+
+/* Keep the body in normal flow so the background fills the installed PWA. */
+:root[data-auth-ios-pwa='true'][data-auth-editing='true'],
+:root[data-auth-ios-pwa='true'][data-auth-editing='true'] body {
+  overflow: clip;
+}
+
+:root[data-auth-keyboard='open'] .auth-screen {
+  height: var(--auth-keyboard-height);
+  padding-bottom: 24px;
+}
+
+:root[data-auth-editing='true'] .auth-content,
+:root[data-auth-keyboard='open'] .auth-content {
+  margin-block: 0 auto;
+}
