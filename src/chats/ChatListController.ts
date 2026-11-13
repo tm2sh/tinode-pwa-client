@@ -8,6 +8,12 @@ import { ChatListFailure, unreadCount, applyChatRecordUpdate, mergeChatListSnaps
 
 type Listener = () => void;
 type PortFactory = () => Promise<ChatListPort>;
+interface ChatListControllerOptions {
+  readonly deferPreviews?: boolean;
+  readonly scheduleInitialRetry?: (error: ChatListError, retry: () => void) => boolean;
+  readonly onInitialLoadFinished?: () => void;
+}
+
 interface Operation {
   readonly abort: AbortController;
   readonly promise: Promise<void>;
@@ -150,7 +156,7 @@ export class ChatListController {
   #operation: Operation | undefined;
   #previews = new Map<string, PreviewInterest>();
   #epoch = 0;
-  #deferPreviews: boolean;
+  readonly #options: ChatListControllerOptions;
   #previewReady = false;
   #previewsSuspended = false;
   #previewPause: ChatPreviewPause | undefined;
@@ -163,9 +169,9 @@ export class ChatListController {
   #ownershipVersion = 0;
   #listeners = new Set<Listener>();
 
-  constructor(openPort: PortFactory, options: { readonly deferPreviews?: boolean } = {}) {
+  constructor(openPort: PortFactory, options: ChatListControllerOptions = {}) {
     this.#openPort = openPort;
-    this.#deferPreviews = options.deferPreviews ?? false;
+    this.#options = options;
   }
 
   readonly prioritizePreviews = (topicKeys: readonly string[]): void => {
@@ -278,8 +284,18 @@ export class ChatListController {
     };
   }
 
-  readonly reconcileForeground = (): void => {
-    if (this.#canRun() && this.#hasReady) this.#port?.reconcileForeground();
+  readonly reconcileForeground = (recover: () => Promise<void>): void => {
+    if (!this.#canRun()) return;
+    if (this.#hasReady) this.#port?.reconcileForeground();
+    else this.recoverInitialLoad(recover);
+  };
+
+  readonly recoverInitialLoad = (recover: () => Promise<void>): void => {
+    if (!this.#canRun() || this.#hasReady || !navigator.onLine) return;
+    const snapshot = this.#snapshot;
+    if (snapshot.phase === 'loading' || (snapshot.phase === 'error' && snapshot.error.retryable)) {
+      void recover();
+    }
   };
 
   readonly start = (): Promise<void> => {
@@ -378,7 +394,7 @@ export class ChatListController {
         (this.#scope !== undefined && !sameScope(this.#scope, result.scope))) throw invalidResponse();
       this.#scope ??= Object.freeze({ serverId: result.scope.serverId, uid: result.scope.uid,
         generation: result.scope.generation });
-      this.#previewReady = !this.#deferPreviews;
+      this.#previewReady = !this.#options.deferPreviews;
       const events = operation.events.filter(event => sameScope(event.scope, result.scope));
       this.#records = new Map(mergeChatListSnapshot(result.records, events, result.revision)
         .map(record => [record.topicKey, copyRecord(record)]));
@@ -392,6 +408,7 @@ export class ChatListController {
         if (event.revision > result.revision && (event.kind === 'ownProfileUpdated' || event.kind === 'unavailable')) this.#applyEvent(event);
       }
       this.#rebuildItems();
+      if (!this.#hasReady) this.#options.onInitialLoadFinished?.();
       this.#hasReady = true;
       this.#finish(operation);
       this.#publishReady();
@@ -401,6 +418,7 @@ export class ChatListController {
       const error = requestError(reason, 'list');
       if (error.kind === 'sessionClosed') { this.dispose(); return; }
       this.#finish(operation);
+      if (!this.#hasReady && this.#options.scheduleInitialRetry?.(error, () => { void this.retry(); })) return;
       if (this.#hasReady) {
         this.#refresh = Object.freeze({ state: 'failed', error: copyError(error) });
         this.#publishReady();

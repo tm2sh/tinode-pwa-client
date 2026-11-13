@@ -6,7 +6,7 @@ import { clientConfig } from '../config';
 import { lazy, Suspense, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import type { OpenContactSearchPort } from '../contacts/contact-search-types';
 import type { AuthError, OpenConversationPort } from '../auth/auth-types';
-import type { ChatListItem, ChatListPort, ChatPreviewPause } from '../chats/chat-list-types';
+import type { ChatListError, ChatListItem, ChatListPort, ChatPreviewPause } from '../chats/chat-list-types';
 import type { ContactOpeningState } from './ChatCreationScreen';
 import type { OwnProfilePort } from '../profile/own-profile-types';
 import type { ConversationContinuation } from '../conversation/ConversationContinuation';
@@ -61,11 +61,15 @@ interface AuthenticatedShellProps {
   readonly openConversationPort: OpenConversationPort;
   readonly continuation: { current: ConversationContinuation | undefined };
   readonly onReconnect: () => Promise<void>;
+  readonly onRecoverChatList: () => Promise<void>;
+  readonly scheduleChatListRetry: (error: ChatListError, retry: () => void) => boolean;
+  readonly onChatListLoaded: () => void;
 }
 export function AuthenticatedShell(props: AuthenticatedShellProps) {
   return <AuthenticatedShellInstance key={import.meta.hot ? import.meta.url : undefined} {...props} />;
 }
-function AuthenticatedShellInstance({ warning, onLogout, openChatListPort, openOwnProfilePort, openContactSearchPort, openGroupCreationPort, openConversationPort, continuation, onReconnect }: AuthenticatedShellProps) {
+function AuthenticatedShellInstance({ warning, onLogout, openChatListPort, openOwnProfilePort, openContactSearchPort, openGroupCreationPort, openConversationPort, continuation, onReconnect,
+  onRecoverChatList, scheduleChatListRetry, onChatListLoaded }: AuthenticatedShellProps) {
   useScreenTranslations('chats');
   const { t, i18n } = useTranslation('chats'), { t: commonT } = useTranslation('common'), { t: errorT } = useTranslation('errors');
   const titleId = useId(), searchPanelId = useId();
@@ -79,7 +83,9 @@ function AuthenticatedShellInstance({ warning, onLogout, openChatListPort, openO
   const contactRequest = useRef<AbortController | undefined>(undefined);
   const [searchQuery, setSearchQuery] = useState<string>();
   const searchOpen = searchQuery !== undefined;
-  const [controller] = useState(() => new ChatListController(openChatListPort, { deferPreviews: true }));
+  const [controller] = useState(() => new ChatListController(openChatListPort, {
+    deferPreviews: true, scheduleInitialRetry: scheduleChatListRetry, onInitialLoadFinished: onChatListLoaded,
+  }));
   const snapshot = useSyncExternalStore(controller.subscribe, controller.getSnapshot);
   const language = i18n.language === 'ru' ? 'ru' : 'en';
   const presenter = useMemo(() => createChatListPresenter({ language, t, errorT }), [language, t, errorT]);
@@ -243,27 +249,38 @@ function AuthenticatedShellInstance({ warning, onLogout, openChatListPort, openO
       if (document.visibilityState === 'hidden') backgrounded = true;
       else if (backgrounded) {
         backgrounded = false;
-        controller.reconcileForeground();
+        controller.reconcileForeground(onRecoverChatList);
       }
     };
     const onPageHide = () => { backgrounded = true; };
+    let lostFocus = false;
+    const onBlur = () => { lostFocus = true; };
+    const onFocus = () => {
+      if (!lostFocus || document.visibilityState === 'hidden') return;
+      lostFocus = false;
+      controller.recoverInitialLoad(onRecoverChatList);
+    };
     const onPageShow = (event: PageTransitionEvent) => {
       if (event.persisted) onVisibility();
     };
     document.addEventListener('visibilitychange', onVisibility);
     window.addEventListener('pagehide', onPageHide);
     window.addEventListener('pageshow', onPageShow);
+    window.addEventListener('blur', onBlur);
+    window.addEventListener('focus', onFocus);
     return () => {
       document.removeEventListener('visibilitychange', onVisibility);
       window.removeEventListener('pagehide', onPageHide);
       window.removeEventListener('pageshow', onPageShow);
+      window.removeEventListener('blur', onBlur);
+      window.removeEventListener('focus', onFocus);
       contactRequest.current?.abort();
       contactRequest.current = undefined;
       const navigation = currentNavigation.current; currentNavigation.current = undefined;
       if (navigation) void navigation.close();
       hotRecoveries?.delete(onReconnect); hotContinuations?.delete(continuation); hotControllers?.delete(controller); detach();
     };
-  }, [controller]);
+  }, [controller, continuation, onReconnect, onRecoverChatList]);
   const backLabel = commonT($ => $.backToChats);
   return <>
     <section className="chats-screen chats-overlay-screen" aria-labelledby={titleId} hidden={route.kind !== 'list'}>

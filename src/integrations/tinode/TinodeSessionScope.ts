@@ -61,6 +61,7 @@ export const tinodeAvatarByteLimit = 5 * 1024 * 1024;
 type PacketListener = (packet: TinodeSessionPacket) => void;
 // The alpha3 SDK promise times out after five seconds even if the socket can still receive the reply.
 const metadataResponseTimeoutMs = 30_000;
+const chatListResponseTimeoutMs = 40_000;
 export type TinodeGroupCreateReply =
   | { readonly state: 'created'; readonly topicKey: string }
   | { readonly state: 'rejected'; readonly code: number }
@@ -984,6 +985,12 @@ export class TinodeSessionScope {
     return this.#request(topic, (sdk) => sdk.subscribe(topic, query));
   }
 
+  readChatList(signal: AbortSignal): Promise<TinodeSessionObject> {
+    // The SDK's simplify() drops Date(0). A string preserves the epoch in the request.
+    return this.#request('me', sdk => this.#requestMetadata(sdk, 'me',
+      { what: 'sub', sub: { ims: '1970-01-01T00:00:00.000Z' } }, signal, chatListResponseTimeoutMs));
+  }
+
   getMeta(topic: string, query: TinodeGetQuery): Promise<TinodeSessionObject> {
     if (!isQuery(query)) return Promise.reject(new TinodeSessionFailure('invalidResponse'));
     return this.#request(topic, (sdk) => query.what === 'data'
@@ -1314,7 +1321,8 @@ export class TinodeSessionScope {
     return this.#request(topic, (sdk) => sdk.leave(topic, false));
   }
 
-  #requestMetadata(sdk: SessionSdk, topic: string, query: TinodeGetQuery, signal?: AbortSignal): Promise<unknown> {
+  #requestMetadata(sdk: SessionSdk, topic: string, query: TinodeGetQuery, signal?: AbortSignal,
+    timeoutMs = metadataResponseTimeoutMs): Promise<unknown> {
     if (signal?.aborted) return Promise.reject(new TinodeSessionFailure('aborted'));
     const id = sdk.getNextUniqueId();
     if (typeof id !== 'string' || id === '') return Promise.reject(new TinodeSessionFailure('invalidResponse'));
@@ -1333,7 +1341,7 @@ export class TinodeSessionScope {
       const abort = () => finish(false, new TinodeSessionFailure('aborted'));
       const pending: PendingMetadata = { topic,
         resolve: (value) => finish(true, value), reject: (reason) => finish(false, reason) };
-      const timer = setTimeout(() => pending.reject(new TinodeSessionFailure('rejected', 504)), metadataResponseTimeoutMs);
+      const timer = setTimeout(() => pending.reject(new TinodeSessionFailure('rejected', 504)), timeoutMs);
       this.#metadataRequests.set(id, pending);
       this.#lifetime.signal.addEventListener('abort', cancel, { once: true });
       signal?.addEventListener('abort', abort, { once: true });
