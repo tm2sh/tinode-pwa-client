@@ -11,6 +11,8 @@ import { normalizeConversationDraft } from '../../conversation/ConversationDraft
 import type { ConversationDraft } from '../../conversation/ConversationDraft';
 import type { TinodeTopicRole, TinodeTopicInterest } from './TinodeTopicInterests';
 import type { AccountScope } from '../../chats/chat-list-types';
+import { sandboxHost } from '../../config/client-config';
+import { inlineMediaByteLimit } from '../../media/MediaResources';
 import type { ServerLimit, ServerLimits } from '../../media/MediaResources';
 import { projectConversationPacket, TinodeConversationProjectionFailure } from './tinode-conversation-packets';
 import type { TinodeEditPayload } from './tinode-message-edit';
@@ -126,7 +128,7 @@ export interface TinodeConversationSubscription {
   deleteMessages(seqs: readonly number[], hard: boolean): Promise<TinodeDeleteResult>;
   prepareText(operationId: string, text: string): TinodePublication;
   prepareEdit(operationId: string, targetSeq: number, input: TinodeEditPayload): TinodePublication;
-  prepareMedia(operationId: string, content: TinodeDraftyMediaContent, reference: string): TinodePublication;
+  prepareMedia(operationId: string, content: TinodeDraftyMediaContent, reference?: string): TinodePublication;
   note(what: 'read' | 'recv', seq: number): void;
   dispose(): void;
 }
@@ -493,8 +495,8 @@ export class TinodeSessionScope {
         return this.#preparePublication(consumer, operationId, input.content, input.references,
           { ...input.metadata, replace: ':' + targetSeq });
       },
-      prepareMedia: (operationId: string, content: TinodeDraftyMediaContent, reference: string) =>
-        this.#preparePublication(consumer, operationId, content, [reference]),
+      prepareMedia: (operationId: string, content: TinodeDraftyMediaContent, reference?: string) =>
+        this.#preparePublication(consumer, operationId, content, reference === undefined ? undefined : [reference]),
       note: (what: 'read' | 'recv', seq: number) => {
         if (!this.active || !this.#sdk || this.#conversation !== consumer || consumer.lifetime.signal.aborted) throw new TinodeSessionFailure('closed');
         if ((what !== 'read' && what !== 'recv') || !isInteger(seq, 1)) throw new TinodeSessionFailure('invalidResponse');
@@ -1396,7 +1398,18 @@ export class TinodeSessionScope {
       return Object.freeze(typeof value === 'number' && Number.isSafeInteger(value) && value > 0
         ? { state: 'known', value } : { state: 'unknown' });
     };
-    return Object.freeze({ maxMessageSize: limit('maxMessageSize'), maxFileUploadSize: limit('maxFileUploadSize') });
+    const maxMessageSize = limit('maxMessageSize');
+    const maxFileUploadSize = limit('maxFileUploadSize');
+    if (this.#mediaProxyOrigin || this.account.serverId !== 'wss://' + sandboxHost) {
+      return Object.freeze({ maxMessageSize, maxFileUploadSize });
+    }
+    // The sandbox file API blocks cross-origin uploads. Reserve room in the
+    // WebSocket packet for Drafty metadata, the filename, and the envelope.
+    const available = maxMessageSize.state === 'known' ? maxMessageSize.value - 2048 : 0;
+    const maxInlineMediaSize: ServerLimit = available >= 4
+      ? { state: 'known', value: Math.min(inlineMediaByteLimit, Math.floor(available / 4) * 3) }
+      : { state: 'unknown' };
+    return Object.freeze({ maxMessageSize, maxFileUploadSize, maxInlineMediaSize: Object.freeze(maxInlineMediaSize) });
   }
 
   // Internal media stream. Add credentials only for the session's HTTPS origin.

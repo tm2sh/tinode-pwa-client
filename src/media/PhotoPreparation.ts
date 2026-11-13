@@ -262,11 +262,11 @@ export async function withDecodedPhoto<T>(file: File, signal: AbortSignal | unde
   }
 }
 
-export function preparePhoto(file: File, signal?: AbortSignal): Promise<PreparedPhoto> {
+export function preparePhoto(file: File, signal?: AbortSignal, maxOutputBytes?: number): Promise<PreparedPhoto> {
   return withDecodedPhoto(file, signal, async (image, context, mime) => {
     const canvas = context.canvas;
     const input = { width: image.naturalWidth, height: image.naturalHeight };
-    const output = fit(input, maxOutputEdge);
+    let output = fit(input, maxOutputEdge);
     const draw = ({ width, height }: Size) => {
       canvas.width = width;
       canvas.height = height;
@@ -275,8 +275,18 @@ export function preparePhoto(file: File, signal?: AbortSignal): Promise<Prepared
     };
 
     draw(output);
-    const blob = await encodePhotoCanvas(canvas, mime, 0.86);
+    let blob = await encodePhotoCanvas(canvas, mime, 0.86);
     checkPhotoAborted(signal);
+    if (maxOutputBytes !== undefined) {
+      while (blob.size > maxOutputBytes && Math.max(output.width, output.height) > 1) {
+        const edge = Math.max(1, Math.floor(Math.max(output.width, output.height) * 0.7));
+        output = fit(input, edge);
+        draw(output);
+        blob = await encodePhotoCanvas(canvas, mime, 0.86);
+        checkPhotoAborted(signal);
+      }
+      if (blob.size > maxOutputBytes) throw new PhotoPreparationFailure('tooLarge');
+    }
 
     let preview: string | undefined;
     for (const edge of [320, 160, 80, 40]) {

@@ -1,10 +1,12 @@
 export const mediaByteBudget = 32 * 1024 * 1024;
+export const inlineMediaByteLimit = 256 * 1024;
 const maxConcurrentLoads = 2;
 
 export type ServerLimit = { readonly state: 'known'; readonly value: number } | { readonly state: 'unknown' };
 export interface ServerLimits {
   readonly maxMessageSize: ServerLimit;
   readonly maxFileUploadSize: ServerLimit;
+  readonly maxInlineMediaSize?: ServerLimit;
 }
 
 export type MediaFailureReason = 'closed' | 'aborted' | 'busy' | 'capacity' | 'tooLarge' |

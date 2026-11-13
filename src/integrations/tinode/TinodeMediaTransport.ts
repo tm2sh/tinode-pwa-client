@@ -1,11 +1,10 @@
 import type { TinodeDraftyMediaContent } from 'tinode-sdk';
 import type { PreparedMediaInput } from '../../media/PreparedMedia';
-import { MediaFailure, MediaResources, mediaByteBudget } from '../../media/MediaResources';
+import { MediaFailure, MediaResources, inlineMediaByteLimit, mediaByteBudget } from '../../media/MediaResources';
 import type { MediaLease, ServerLimits } from '../../media/MediaResources';
 import { TinodeSessionFailure } from './TinodeSessionScope';
 import type { TinodeSessionScope } from './TinodeSessionScope';
 
-const inlineByteLimit = 256 * 1024;
 const photoPreviewByteLimit = 32 * 1024;
 const downloadTimeoutMs = 30_000;
 
@@ -72,12 +71,12 @@ function matchesMime(bytes: Uint8Array, mime: string): boolean {
 function decodeInline(source: Extract<TinodeMediaSource, { kind: 'inline' }>, reserve: (size: number) => void): Blob {
   const mime = checkedMime(source);
   const encoded = source.base64;
-  if (encoded.length > Math.ceil(inlineByteLimit / 3) * 4) throw new MediaFailure('tooLarge');
+  if (encoded.length > Math.ceil(inlineMediaByteLimit / 3) * 4) throw new MediaFailure('tooLarge');
   if (!encoded.length || encoded.length % 4 !== 0 || !/^[A-Za-z0-9+/]+={0,2}$/.test(encoded)) {
     throw new MediaFailure('invalidResponse');
   }
   const size = encoded.length / 4 * 3 - (encoded.endsWith('==') ? 2 : encoded.endsWith('=') ? 1 : 0);
-  if (size > inlineByteLimit) throw new MediaFailure('tooLarge');
+  if (size > inlineMediaByteLimit) throw new MediaFailure('tooLarge');
   reserve(size);
   let binary: string;
   try { binary = atob(encoded); } catch { throw new MediaFailure('invalidResponse'); }
@@ -200,13 +199,14 @@ export class TinodeMediaTransport {
     return this.#scope.mediaLimits();
   }
 
-  async uploadPrepared(file: PreparedMediaInput, signal: AbortSignal,
-    onProgress?: (fraction: number) => void): Promise<{ content: TinodeDraftyMediaContent; reference: string }> {
+  async preparePublication(file: PreparedMediaInput, signal: AbortSignal,
+    onProgress?: (fraction: number) => void): Promise<{ content: TinodeDraftyMediaContent; reference?: string }> {
     if (signal.aborted) throw new MediaFailure('aborted');
-    const { maxFileUploadSize, maxMessageSize } = this.limits;
-    if (maxFileUploadSize.state !== 'known' || maxMessageSize.state !== 'known') throw new TinodeSessionFailure('limitsUnavailable');
+    const { maxFileUploadSize, maxMessageSize, maxInlineMediaSize } = this.limits;
+    const byteLimit = maxInlineMediaSize ?? maxFileUploadSize;
+    if (byteLimit.state !== 'known' || maxMessageSize.state !== 'known') throw new TinodeSessionFailure('limitsUnavailable');
     if (!(file.blob instanceof Blob) || file.blob.size === 0) throw new MediaFailure('invalidResponse');
-    if (file.blob.size > maxFileUploadSize.value) throw new MediaFailure('tooLarge');
+    if (file.blob.size > byteLimit.value) throw new MediaFailure('tooLarge');
     const mime = mimeEssence(file.blob.type);
     if (!supported.has(mime) || !mime.startsWith(file.kind === 'photo' ? 'image/' : 'audio/')) {
       throw new MediaFailure('unsupported');
@@ -218,7 +218,7 @@ export class TinodeMediaTransport {
       if (!positive(file.width) || !positive(file.height) || Math.max(file.width, file.height) > 2048) throw new MediaFailure('invalidResponse');
       data.width = file.width;
       data.height = file.height;
-      if (file.preview !== undefined) {
+      if (!maxInlineMediaSize && file.preview !== undefined) {
         if (!boundedBase64(file.preview, photoPreviewByteLimit)) throw new MediaFailure('invalidResponse');
         decodeInline({ kind: 'inline', family: 'image', mime, base64: file.preview }, () => {});
         data.val = file.preview;
@@ -235,6 +235,17 @@ export class TinodeMediaTransport {
     const signature = new Uint8Array(await file.blob.slice(0, 16).arrayBuffer());
     if (signal.aborted) throw new MediaFailure('aborted');
     if (!matchesMime(signature, mime)) throw new MediaFailure('invalidResponse');
+    if (maxInlineMediaSize) {
+      const bytes = new Uint8Array(await file.blob.arrayBuffer());
+      if (signal.aborted) throw new MediaFailure('aborted');
+      if (!this.#scope.active) throw new MediaFailure('closed');
+      let binary = '';
+      for (let offset = 0; offset < bytes.length; offset += 8192) {
+        binary += String.fromCharCode(...bytes.subarray(offset, offset + 8192));
+      }
+      data.val = btoa(binary);
+      return { content };
+    }
     const reference = await this.#upload(new File([file.blob], filename, { type: mime }), signal, onProgress);
     data.ref = reference;
     return { content, reference };

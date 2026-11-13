@@ -579,7 +579,10 @@ export class ConversationController {
   };
   get voiceSignal(): AbortSignal { return this.#voiceLifetime.signal; }
   readonly voiceLimit = (): ServerLimit => {
-    try { return this.#port?.mediaLimits?.().maxFileUploadSize ?? { state: 'unknown' }; }
+    try {
+      const limits = this.#port?.mediaLimits?.();
+      return limits?.maxInlineMediaSize ?? limits?.maxFileUploadSize ?? { state: 'unknown' };
+    }
     catch { return { state: 'unknown' }; }
   };
   readonly submitVoice = (file: PreparedVoice): Promise<void> => {
@@ -676,6 +679,7 @@ export class ConversationController {
   async #sendPhotoBatch(files: File[], port: ConversationPort, batch: AbortController): Promise<void> {
     try {
       const { preparePhoto, PhotoPreparationFailure } = await import('../media/PhotoPreparation');
+      const inlineLimit = port.mediaLimits().maxInlineMediaSize;
       for (const file of files) {
         if (!this.#canSendPhotos(port, batch)) break;
         const operationId = crypto.randomUUID();
@@ -685,7 +689,7 @@ export class ConversationController {
         this.#scrollRevision++; this.#scrollTarget = 'latest';
         this.#syncOutgoing(); this.#publishReady({});
         try {
-          const prepared = await preparePhoto(file, batch.signal);
+          const prepared = await preparePhoto(file, batch.signal, inlineLimit?.state === 'known' ? inlineLimit.value : undefined);
           if (!this.#canSendPhotos(port, batch)) break;
           let preview: AvatarImageSource | undefined;
           if (prepared.preview) {

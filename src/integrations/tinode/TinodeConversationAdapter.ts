@@ -2,7 +2,7 @@ import { confirmedGroupRosterCount } from '../../chat-info/chat-info-normalize';
 import type { GroupPublicPatch } from '../../chat-info/group-public-patch';
 import type { TinodeTextContent } from 'tinode-sdk';
 import type { ChatInfoIdentity, ChatInfoPort, ChatInfoSeed } from '../../chat-info/chat-info-types';
-import { MediaFailure } from '../../media/MediaResources';
+import { MediaFailure, inlineMediaByteLimit } from '../../media/MediaResources';
 import type { MediaLease } from '../../media/MediaResources';
 import type { TinodeMediaSource } from './TinodeMediaTransport';
 import { preparedMediaFile } from '../../media/PreparedMedia';
@@ -263,7 +263,8 @@ export class TinodeConversationAdapter implements ConversationPort {
   #listeners = new Set<ConversationReadListener>();
   readonly #voiceSources = new WeakMap<ConversationMediaReference, { readonly seq: number; readonly source: TinodeMediaSource }>();
   readonly #photoSources = new WeakMap<ConversationMediaReference, { readonly seq: number; readonly source: TinodeMediaSource }>();
-  readonly #photoPreviews = new WeakMap<NonNullable<PhotoAttachment['preview']>, Extract<TinodeMediaSource, { kind: 'inline' }>>();
+  readonly #photoPreviews = new WeakMap<NonNullable<PhotoAttachment['preview']>,
+    { readonly source: Extract<TinodeMediaSource, { kind: 'inline' }>; readonly fullPhoto: boolean }>();
   #publications = new Map<string, Publication>();
   #publicationRequests = new Map<string, Publication>();
   #openPromise: Promise<ConversationOpenResult> | undefined;
@@ -691,7 +692,7 @@ export class TinodeConversationAdapter implements ConversationPort {
     return this.#startPublication(operationId, prepared.file.kind, signal, async (key, subscription, lifetime) => {
       const { TinodeMediaTransport } = await import('./TinodeMediaTransport');
       this.#assertWritable(lifetime);
-      const { content, reference } = await TinodeMediaTransport.forScope(this.#scope).uploadPrepared(prepared.file, lifetime, onUploadProgress);
+      const { content, reference } = await TinodeMediaTransport.forScope(this.#scope).preparePublication(prepared.file, lifetime, onUploadProgress);
       this.#assertWritable(lifetime);
       return { request: subscription.prepareMedia(key, content, reference), content };
     });
@@ -733,17 +734,19 @@ export class TinodeConversationAdapter implements ConversationPort {
 
   async acquirePhotoPreview(preview: NonNullable<PhotoAttachment['preview']>, signal: AbortSignal): Promise<MediaLease> {
     this.#assertInterest(signal);
-    const source = this.#photoPreviews.get(preview);
-    if (!source || this.#permissions?.canRead.state !== 'allowed') throw new MediaFailure('unavailable');
+    const registered = this.#photoPreviews.get(preview);
+    if (!registered || this.#permissions?.canRead.state !== 'allowed') throw new MediaFailure('unavailable');
     const { TinodeMediaTransport } = await import('./TinodeMediaTransport');
     this.#assertInterest(signal);
-    return TinodeMediaTransport.forScope(this.#scope).acquirePhotoPreview(preview.resourceId, source, signal);
+    const transport = TinodeMediaTransport.forScope(this.#scope);
+    return registered.fullPhoto ? transport.acquirePhoto(preview.resourceId, registered.source, signal)
+      : transport.acquirePhotoPreview(preview.resourceId, registered.source, signal);
   }
 
   #registerVoice(seq: number, index: number, data: Readonly<Record<string, unknown>>, mime?: string): VoiceAttachment['media'] {
     const source: TinodeMediaSource | undefined = typeof data.ref === 'string' && data.ref.trim() && data.ref.length <= 8192
       ? { kind: 'reference', family: 'audio', reference: data.ref, mime }
-      : typeof data.val === 'string' && data.val && data.val.length <= Math.ceil(256 * 1024 / 3) * 4 && mime
+      : typeof data.val === 'string' && data.val && data.val.length <= Math.ceil(inlineMediaByteLimit / 3) * 4 && mime
         ? { kind: 'inline', family: 'audio', base64: data.val, mime } : undefined;
     if (!source) return Object.freeze({ state: 'missing' });
     const media = Object.freeze({ state: 'available', resourceId: this.topicKey + ':voice:' + seq + ':' + index } as const);
@@ -760,16 +763,17 @@ export class TinodeConversationAdapter implements ConversationPort {
     let media: ConversationMediaReference = Object.freeze({ state: 'missing' });
     const source: TinodeMediaSource | undefined = typeof data.ref === 'string' && data.ref.trim() && data.ref.length <= 8192
       ? { kind: 'reference', family: 'image', reference: data.ref, mime }
-      : inline && inline.length <= Math.ceil(256 * 1024 / 3) * 4 && inlineMime
+      : inline && inline.length <= Math.ceil(inlineMediaByteLimit / 3) * 4 && inlineMime
         ? { kind: 'inline', family: 'image', base64: inline, mime: inlineMime } : undefined;
     if (source) {
       media = Object.freeze({ state: 'available', resourceId: id });
       this.#photoSources.set(media, { seq, source });
     }
-    if (!inline || inline.length > Math.ceil(32 * 1024 / 3) * 4 ||
+    const fullPhoto = source?.kind === 'inline';
+    if (!inline || (!fullPhoto && inline.length > Math.ceil(32 * 1024 / 3) * 4) ||
       (inlineMime !== 'image/jpeg' && inlineMime !== 'image/png')) return { media };
     const preview = Object.freeze({ state: 'available', resourceId: id + ':preview' } as const);
-    this.#photoPreviews.set(preview, { kind: 'inline', family: 'image', base64: inline, mime: inlineMime });
+    this.#photoPreviews.set(preview, { source: { kind: 'inline', family: 'image', base64: inline, mime: inlineMime }, fullPhoto });
     return { media, preview };
   }
 

@@ -13,7 +13,7 @@ export interface ClientConfig {
 
 export type ClientEnvironment = Readonly<Record<string, string | undefined>>;
 
-const sandboxHost = 'sandbox.tinode.co';
+export const sandboxHost = 'sandbox.tinode.co';
 
 // Public application key from https://github.com/tinode/webapp/blob/master/src/config.js.
 // This key is separate from user session tokens.
