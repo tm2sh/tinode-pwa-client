@@ -784,7 +784,9 @@ export class TinodeChatListAdapter implements ChatListPort {
     try {
       await this.#wait(this.#attachMe(), signal);
       this.#assertCurrent(generation, signal);
-      const response = await this.#scope.readChatList(signal);
+      // The SDK's simplify() drops Date(0). A string preserves the epoch in the request.
+      const request = this.#scope.getMeta('me', { what: 'sub', sub: { ims: '1970-01-01T00:00:00.000Z' } });
+      const response = await this.#wait(request, signal);
       this.#assertCurrent(generation, signal);
       checkControl(response);
       const events = this.#snapshotEvents?.events ?? [];

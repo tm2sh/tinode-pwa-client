@@ -7,7 +7,7 @@ import type { InvalidSessionReason, SessionReadResult } from './SessionStore';
 import { TinodeAuthAdapter, TinodeAuthFailure, normalizeTinodeError } from '../integrations/tinode/TinodeAuthAdapter';
 
 import type { OpenConversationPort } from './auth-types';
-import type { ChatListError, ChatListPort } from '../chats/chat-list-types';
+import type { ChatListPort } from '../chats/chat-list-types';
 import type { OwnProfilePort } from '../profile/own-profile-types';
 
 type Listener = () => void;
@@ -75,11 +75,6 @@ function invalidSessionError(reason: InvalidSessionReason): AuthError {
 }
 
 const activeControllers = new Set<AuthController>();
-const networkRetryDelays = [5_000, 10_000, 20_000] as const;
-
-function canRetryNetwork(error: AuthError): boolean {
-  return error.retryable && (error.kind === 'network' || error.kind === 'timeout');
-}
 
 export class AuthController {
   #config: Readonly<ClientConfig>;
@@ -98,10 +93,6 @@ export class AuthController {
   #storageLinked = false;
   #expiryTimer: ReturnType<typeof setTimeout> | undefined;
   #watching = false;
-  #awaitingChatList = false;
-  #networkRetries = 0;
-  #networkRetryTimer: ReturnType<typeof setTimeout> | undefined;
-  #networkRecovery: Promise<void> | undefined;
 
   constructor(config: Readonly<ClientConfig>) {
     this.#config = config;
@@ -288,8 +279,8 @@ export class AuthController {
     if (!this.#canRun()) return Promise.resolve();
     if (this.#operation) return this.#operation.promise;
     if (this.#snapshot.phase !== 'restoreError') return Promise.resolve();
-    this.#networkRetries = 0;
-    return this.#restartSavedSession();
+    this.#invalidate();
+    return this.#beginRestore();
   };
 
   // Explicit recovery of an unsafe conversation Scope. Only this owner restores the token.
@@ -298,69 +289,9 @@ export class AuthController {
     if (this.#operation) return this.#operation.promise;
     if (this.#snapshot.phase === 'restoreError') return this.retryRestore();
     if (this.#snapshot.phase !== 'authenticated') return Promise.resolve();
-    return this.#restartSavedSession();
-  };
-
-  readonly recoverChatList = (): Promise<void> => {
-    if (!this.#canRun() || !this.#awaitingChatList || !this.#storageLinked) return Promise.resolve();
-    if (this.#networkRecovery) return this.#networkRecovery;
-    const snapshot = this.#snapshot;
-    if (snapshot.phase !== 'authenticated' && snapshot.phase !== 'checkingSession' &&
-      !(snapshot.phase === 'restoreError' && canRetryNetwork(snapshot.error))) return Promise.resolve();
-
-    this.#networkRetries = 0;
-    const recovery = this.#restartSavedSession().finally(() => {
-      if (this.#networkRecovery === recovery) this.#networkRecovery = undefined;
-    });
-    this.#networkRecovery = recovery;
-    return recovery;
-  };
-
-  readonly scheduleChatListRetry = (error: ChatListError, retry: () => void): boolean => {
-    if (!this.#canRun() || this.#snapshot.phase !== 'authenticated') return false;
-    if (!error.retryable || error.kind === 'invalidResponse') {
-      this.completeChatListLoad();
-      return false;
-    }
-    return this.#scheduleNetworkRetry(this.#storageLinked && (error.kind === 'network' || error.kind === 'timeout')
-      ? () => { void this.#restartSavedSession(); } : retry);
-  };
-
-  readonly completeChatListLoad = (): void => {
-    this.#awaitingChatList = false;
-    this.#networkRetries = 0;
-    this.#clearNetworkRetry();
-  };
-
-  #scheduleNetworkRetry(retry: () => void): boolean {
-    const delay = networkRetryDelays[this.#networkRetries];
-    if (delay === undefined) return false;
-    if (this.#networkRetryTimer !== undefined) return true;
-    this.#networkRetryTimer = setTimeout(() => {
-      this.#networkRetryTimer = undefined;
-      if (!this.#canRun()) return;
-      this.#networkRetries += 1;
-      retry();
-    }, delay);
-    return true;
-  }
-
-  #clearNetworkRetry(): void {
-    clearTimeout(this.#networkRetryTimer);
-    this.#networkRetryTimer = undefined;
-  }
-
-  #restartSavedSession(): Promise<void> {
     this.#invalidate();
     return this.#beginRestore();
-  }
-
-  #publishWithNetworkRecovery(snapshot: AuthSnapshot): void {
-    if (this.#awaitingChatList && snapshot.phase === 'restoreError' && canRetryNetwork(snapshot.error) &&
-      this.#scheduleNetworkRetry(() => { void this.#restartSavedSession(); })) {
-      this.#publish({ phase: 'checkingSession' });
-    } else this.#publish(snapshot);
-  }
+  };
 
   #beginRestore(): Promise<void> {
     this.#startWatching();
@@ -626,7 +557,6 @@ export class AuthController {
     if (saved.kind === 'invalid') throw new TinodeAuthFailure(saved.error);
     this.#session = session;
     this.#storageLinked = saved.kind === 'saved';
-    this.#awaitingChatList = true;
     return {
       phase: 'authenticated',
       identity: { uid: result.identity.uid },
@@ -655,7 +585,7 @@ export class AuthController {
                 ? this.#registrationFailure(safe, this.#snapshot.requirements)
                 : { phase: 'signedOut' as const, flow: 'login' as const, error: safe };
         this.#invalidate();
-        this.#publishWithNetworkRecovery(snapshot);
+        this.#publish(snapshot);
       });
       this.#adapter = adapter;
     }
@@ -748,7 +678,6 @@ export class AuthController {
     if (this.#watching) return;
     this.#watching = true;
     window.addEventListener('storage', this.#onStorage);
-    window.addEventListener('online', this.#onOnline);
     window.addEventListener('focus', this.#onResume);
     window.addEventListener('pageshow', this.#onResume);
     document.addEventListener('visibilitychange', this.#onResume);
@@ -757,7 +686,6 @@ export class AuthController {
   #stopWatching(): void {
     this.#watching = false;
     window.removeEventListener('storage', this.#onStorage);
-    window.removeEventListener('online', this.#onOnline);
     window.removeEventListener('focus', this.#onResume);
     window.removeEventListener('pageshow', this.#onResume);
     document.removeEventListener('visibilitychange', this.#onResume);
@@ -784,17 +712,8 @@ export class AuthController {
     this.#closeContext(changedSessionError());
   };
 
-  #onOnline = (): void => { void this.recoverChatList(); };
-
   #onResume = (): void => {
-    if (document.visibilityState === 'hidden') return;
-    this.#checkSession();
-    const snapshot = this.#snapshot;
-    if (navigator.onLine && this.#awaitingChatList && this.#storageLinked &&
-      ((snapshot.phase === 'checkingSession' && this.#networkRetryTimer !== undefined) ||
-        (snapshot.phase === 'restoreError' && canRetryNetwork(snapshot.error)))) {
-      void this.recoverChatList();
-    }
+    if (document.visibilityState !== 'hidden') this.#checkSession();
   };
 
   #scheduleExpiry(): void {
@@ -854,7 +773,7 @@ export class AuthController {
     if (!this.#isCurrent(operation)) return;
     this.#operation = undefined;
     operation.resolve();
-    this.#publishWithNetworkRecovery(snapshot);
+    this.#publish(snapshot);
   }
 
   #clearSensitive(operation: Operation): void {
@@ -874,8 +793,6 @@ export class AuthController {
   }
 
   #invalidate(): void {
-    this.#clearNetworkRetry();
-    this.#networkRecovery = undefined;
     this.#generation += 1;
     const operation = this.#operation;
     this.#operation = undefined;
@@ -893,7 +810,6 @@ export class AuthController {
     if (!['checkingSession', 'authenticated', 'restoreError'].includes(snapshot.phase)) {
       this.#session = undefined;
       this.#storageLinked = false;
-      this.completeChatListLoad();
     }
     this.#scheduleExpiry();
     for (const listener of [...this.#listeners]) {

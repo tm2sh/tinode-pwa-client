@@ -79,8 +79,6 @@ function AppInstance() {
   } else if (snapshot.phase === 'authenticated') {
     content = <AuthenticatedShell key={snapshot.identity.uid} warning={snapshot.warning} onLogout={logout}
       continuation={continuation} onReconnect={controller.reconnectSession}
-      onRecoverChatList={controller.recoverChatList} scheduleChatListRetry={controller.scheduleChatListRetry}
-      onChatListLoaded={controller.completeChatListLoad}
       openChatListPort={controller.openChatListPort} openConversationPort={controller.openConversationPort}
       openOwnProfilePort={controller.openOwnProfilePort} openContactSearchPort={controller.openContactSearchPort}
       openGroupCreationPort={controller.openGroupCreationPort} />;
