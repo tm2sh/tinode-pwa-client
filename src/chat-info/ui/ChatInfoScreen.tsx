@@ -81,7 +81,7 @@ function InfoError({ error, onRetry, busy = false }: {
   const { t } = useTranslation('errors'), { t: commonT } = useTranslation('common');
   return <div className="chat-info-error">
     <p role="alert">{t($ => $[error.messageCode])}</p>
-    {error.retryable && onRetry && <button type="button" className="chat-info-retry" disabled={busy} onClick={onRetry}>{commonT($ => $.retry)}</button>}
+    {error.retryable && onRetry && <button type="button" className="glass-control chat-info-retry" disabled={busy} onClick={onRetry}>{commonT($ => $.retry)}</button>}
   </div>;
 }
 
@@ -151,7 +151,7 @@ function GroupMembers({ state, onRetry, busy, onVisible, isChannel, ownUid, canM
   const numbers = new Intl.NumberFormat(i18n.resolvedLanguage ?? i18n.language);
   const error = state.state === 'failed' || state.state === 'unavailable' ? state.error : undefined;
   return <section className="chat-info-members" aria-labelledby={labelId} aria-busy={busy || state.state === 'loading'}>
-    {canManage && onAdd && <button type="button" className="chat-info-add-member" disabled={busy} onClick={onAdd}>
+    {canManage && onAdd && <button type="button" className="glass-control chat-info-add-member" disabled={busy} onClick={onAdd}>
       {t($ => $.members.addLabel)}
     </button>}
     <h2 ref={heading} id={labelId} tabIndex={-1} className="settings-list-heading chat-info-members-heading">
@@ -174,7 +174,7 @@ function GroupMembers({ state, onRetry, busy, onVisible, isChannel, ownUid, canM
       <p className="chat-info-members-note" role="status">{loaded.totalCount.state === 'known'
         ? t($ => $.members.partialCount, { shown: numbers.format(members.length), total: numbers.format(loaded.totalCount.value) })
         : t($ => $.members.partial)}</p>
-      {!error && <button type="button" className="chat-info-retry" disabled={busy} onClick={onRetry}>{commonT($ => $.retry)}</button>}
+      {!error && <button type="button" className="glass-control chat-info-retry" disabled={busy} onClick={onRetry}>{commonT($ => $.retry)}</button>}
     </div>}
     {state.state === 'loading' && <InfoProgress text={t($ => $.members.loading)} />}
     {state.state === 'unavailable' && state.reason === 'unsupported'

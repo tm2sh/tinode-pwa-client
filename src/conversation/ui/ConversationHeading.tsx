@@ -60,12 +60,12 @@ export function ConversationHeading({ data, initialAvatar, titleId, notification
       {searchField}
     </> : <>
       <BackButton className="conversation-control" onBack={onBack} />
-      <button type="button" className="conversation-heading-glass" ref={infoButtonRef}
+      <button type="button" className="glass-control conversation-heading-glass" ref={infoButtonRef}
         disabled={!infoEnabled} onClick={onOpenInfo} aria-label={infoLabel}>
         <span className="conversation-header-avatar"><ChatAvatar avatar={avatar} name={title} /></span>
         <div className="conversation-heading-copy">
-          <h1 id={titleId}><span>{title}</span>{notificationsMuted && <MutedChatIcon />}</h1>
-          <span>{subtitle}</span>
+          <h1 id={titleId} className="glass-control-title"><span>{title}</span>{notificationsMuted && <MutedChatIcon />}</h1>
+          <span className="glass-control-subtitle">{subtitle}</span>
         </div>
       </button>
     </>}

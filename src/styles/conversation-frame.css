@@ -18,8 +18,8 @@
   -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 }
 .conversation-screen::before, .conversation-screen::after { content: ''; position: absolute; left: 0; right: 0; z-index: 2; pointer-events: none; }
-.conversation-screen::before { top: 0; height: calc(var(--conversation-header-top) + var(--conversation-control)); background: var(--chat-header-scrim); }
-.conversation-screen::after { bottom: 0; height: calc(var(--conversation-footer-bottom) + var(--conversation-control)); background: linear-gradient(to top, var(--scrim-strong), var(--scrim-medium) 40%, var(--scrim-soft) 75%, transparent); }
+.conversation-screen::before { top: 0; height: calc(var(--conversation-header-top) + var(--edge-scrim-control-factor, 1) * var(--conversation-control)); background: var(--chat-header-scrim); }
+.conversation-screen::after { bottom: 0; height: calc(var(--conversation-footer-bottom) + var(--edge-scrim-control-factor, 1) * var(--conversation-control)); background: linear-gradient(to top, var(--scrim-strong), var(--scrim-medium) 40%, var(--scrim-soft) 75%, transparent); }
 .conversation-screen button { appearance: none; -webkit-appearance: none; color: inherit; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; outline: none; }
 .conversation-screen button:disabled { cursor: default; }
 .conversation-control, .conversation-heading-glass, .conversation-message-field, .conversation-history-button {

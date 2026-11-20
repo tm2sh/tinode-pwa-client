@@ -19,13 +19,13 @@ interface HeaderSearchFieldProps {
 
 export function HeaderSearchField({ id, input, label, placeholder, inputLabel, disabled, autoFocus = true, query, onQuery, onKeyDown, status }: HeaderSearchFieldProps) {
   useLayoutEffect(() => { if (autoFocus) input.current?.focus({ preventScroll: true }); }, [autoFocus, input]);
-  return <div id={id} className="header-glass-pill header-search-field" role="search" aria-label={label}>
+  return <div id={id} className="glass-control header-glass-pill header-search-field" role="search" aria-label={label}>
     <AppIcon name="search" />
     <div className="header-search-copy">
       <input ref={input} type="search" value={query} onChange={event => onQuery(event.currentTarget.value)}
         onKeyDown={onKeyDown} aria-label={inputLabel ?? placeholder} placeholder={placeholder}
         disabled={disabled} autoComplete="off" autoCapitalize="none" enterKeyHint="search" />
-      {status !== undefined && <p role="status">{status}</p>}
+      {status !== undefined && <p role="status" className="glass-control-subtitle">{status}</p>}
     </div>
   </div>;
 }
@@ -40,7 +40,7 @@ interface HeaderSearchToggleProps {
 }
 
 export function HeaderSearchToggle({ buttonRef, open, label, panelId, disabled, onToggle }: HeaderSearchToggleProps) {
-  return <button ref={buttonRef} type="button" className="header-glass-button header-search-toggle" disabled={disabled}
+  return <button ref={buttonRef} type="button" className="glass-control header-glass-button header-search-toggle" disabled={disabled}
     aria-label={label} aria-expanded={open} aria-controls={open ? panelId : undefined} onClick={onToggle}>
     <AppIcon name={open ? 'close' : 'search'} />
   </button>;

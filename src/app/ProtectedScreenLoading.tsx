@@ -17,7 +17,7 @@ export function ProtectedScreenFailure({ onBack, onRetry }: { readonly onBack: (
     <header className="chats-header"><BackButton className="chats-round-button" onBack={onBack} /></header>
     <div className="protected-screen-error">
       <p role="alert">{t($ => $.panelLoadFailed)}</p>
-      <button type="button" className="app-status-button" onClick={onRetry}>{t($ => $.retry)}</button>
+      <button type="button" className="glass-control app-status-button" onClick={onRetry}>{t($ => $.retry)}</button>
     </div>
   </section>;
 }

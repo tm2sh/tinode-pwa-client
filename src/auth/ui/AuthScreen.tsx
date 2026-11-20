@@ -37,7 +37,7 @@ export function AuthScreen({ appName, busy, error, challenge, onLogin, onConfirm
   const registration = registrationEnabled && flow === 'registration' && !challenge;
   const registrationBlocked = error?.kind === 'unsupportedCredential' ||
     (error?.kind === 'invalidResponse' && error.operation === 'getRequirements');
-  const back = <button className="auth-submit auth-back" type="button"
+  const back = <button className="glass-control auth-submit auth-back" type="button"
     onClick={onReturnToLogin}>{commonT(($) => $.backToLogin)}</button>;
   const titleId = useId();
   const screenRef = useRef<HTMLElement>(null);
@@ -59,7 +59,7 @@ export function AuthScreen({ appName, busy, error, challenge, onLogin, onConfirm
   } else {
     form = <>
       <LoginForm busy={busy} error={logoutError ? undefined : error} onSubmit={onLogin} onEdit={onEdit} />
-      {registrationEnabled && onOpenRegistration && <button className="auth-submit auth-back" type="button"
+      {registrationEnabled && onOpenRegistration && <button className="glass-control auth-submit auth-back" type="button"
         disabled={busy} onClick={() => { void onOpenRegistration(); }}>{t(($) => $.registration.submit)}</button>}
     </>;
   }
@@ -73,7 +73,7 @@ export function AuthScreen({ appName, busy, error, challenge, onLogin, onConfirm
         </header>
         {form}
         {logoutError && <p className="auth-error" role="alert">{authErrorText(errorT, logoutError)}</p>}
-        {onRetryLogout && <button className="auth-submit" type="button" onClick={onRetryLogout}>{t(($) => $.retryLogout)}</button>}
+        {onRetryLogout && <button className="glass-control auth-submit" type="button" onClick={onRetryLogout}>{t(($) => $.retryLogout)}</button>}
       </div>
     </section>
   );

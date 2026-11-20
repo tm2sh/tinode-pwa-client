@@ -140,7 +140,7 @@ export function LoginForm({ busy = false, error, onSubmit, onEdit }: LoginFormPr
         </div>
       </div>
       <p className="auth-error" id={errorId} role="alert" hidden={!message}>{message}</p>
-      <button className="auth-submit" type="submit" disabled={waiting || !onSubmit}>
+      <button className="glass-control auth-submit" type="submit" disabled={waiting || !onSubmit}>
         <AppIcon name="spinner" className={waiting ? 'auth-spinner' : 'auth-spinner is-hidden'} />
         <span aria-live="polite">{waiting ? t(($) => $.login.submitting) : t(($) => $.login.submit)}</span>
       </button>

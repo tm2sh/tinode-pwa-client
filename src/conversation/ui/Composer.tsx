@@ -1,20 +1,10 @@
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useSyncExternalStore } from 'react';
 import { AppIcon } from '../../app/AppIcon';
-import type { ComponentProps } from 'react';
 import { VoiceRecorder } from '../../media/VoiceRecorder';
 import { VoiceCapturePopup } from './VoiceCapturePopup';
 import { useTranslation } from 'react-i18next';
 import type { ConversationController } from '../ConversationController';
 import type { ConversationComposerState } from '../conversation-types';
-
-function ComposerIcon(props: ComponentProps<typeof AppIcon>) {
-  const variant = props.name === 'attachment' ? 'attachment-glass'
-    : props.name === 'microphone' ? 'microphone-glass' : undefined;
-  return <>
-    <AppIcon {...props} className={[variant ? 'conversation-composer-icon-default' : '', props.className].filter(Boolean).join(' ') || undefined} />
-    {variant && <AppIcon name={variant} size={props.size} className="conversation-composer-icon-glass" />}
-  </>;
-}
 
 export function Composer({ controller, state, writable, active = true, onReconnect }: { readonly controller: ConversationController;
   readonly state?: ConversationComposerState; readonly writable: boolean; readonly active?: boolean; readonly onReconnect?: () => Promise<void> }) {
@@ -98,7 +88,7 @@ export function Composer({ controller, state, writable, active = true, onReconne
           event.currentTarget.value = '';
           if (files.length && canSendNewMessage() && !blocked && !capturing) void controller.submitPhotos(files);
         }} />
-      <button className="conversation-control" type="button" disabled={edit ? !active || editLocked : blocked && !capturing}
+      <button className="glass-control conversation-control" type="button" disabled={edit ? !active || editLocked : blocked && !capturing}
         aria-label={edit ? t($ => $.composer.cancelEdit) : capturing ? mediaT($ => $.voice.cancel) : mediaT($ => $.choosePhoto)}
         onPointerDown={event => { if (edit && document.activeElement === messageInput.current) event.preventDefault(); }}
         onClick={() => {
@@ -106,9 +96,9 @@ export function Composer({ controller, state, writable, active = true, onReconne
           else if (capturing) recorder.cancel();
           else photoInput.current?.click();
         }}>
-        <ComposerIcon name={edit || capturing ? 'close' : 'attachment'} />
+        <AppIcon name={edit || capturing ? 'close' : 'attachment'} />
       </button>
-      <div className="conversation-message-field">{capturing ? <div className="conversation-capture-status" role="status">
+      <div className="glass-control conversation-message-field">{capturing ? <div className="conversation-capture-status" role="status">
         <span className={capture.phase === 'recording' ? 'conversation-recording-dot' : undefined} aria-hidden="true" />
         <span>{capture.phase === 'requesting' ? mediaT($ => $.voice.requesting) : capture.phase === 'finalizing' ? mediaT($ => $.voice.finalizing)
           : capture.phase === 'ready' ? mediaT($ => $.voice.ready) : mediaT($ => $.voice.recording)}</span>
@@ -126,7 +116,7 @@ export function Composer({ controller, state, writable, active = true, onReconne
           onCompositionStart={() => { composing.current = true; }}
           onCompositionEnd={() => { composing.current = false; compositionBoundary(); }} />
       </div>}</div>
-      <button className={'conversation-control' + (edit || (!capturing && hasText) || (capture.phase === 'ready' || capture.phase === 'recording') ? ' conversation-send' : '')}
+      <button className={'glass-control conversation-control' + (edit || (!capturing && hasText) || (capture.phase === 'ready' || capture.phase === 'recording') ? ' conversation-send' : '')}
         type={edit || (!capturing && hasText) ? 'submit' : 'button'}
         disabled={edit ? unknownEdit ? !active || (!reconnectEdit && !state?.canVerify) : !canSaveEdit : blocked || capture.phase === 'finalizing' || capture.phase === 'requesting'}
         aria-label={edit ? unknownEdit ? t($ => $.composer.checkEdit) : t($ => $.composer.saveEdit) : capture.phase === 'recording' || capture.phase === 'ready' ? mediaT($ => $.voice.send)
@@ -135,7 +125,7 @@ export function Composer({ controller, state, writable, active = true, onReconne
         onClick={() => { if (edit) return;
           if (capture.phase === 'recording') void recorder.stop().then(() => { if (!canSendNewMessage()) { recorder.cancel(); return; } const file = recorder.takeRecording(); if (file) void controller.submitVoice(file); }); else if (capture.phase === 'ready') sendVoice();
           else if (!hasText && !blocked && canSendNewMessage()) void recorder.start(); }}>
-        <ComposerIcon name={savingEdit || checkingEdit ? 'spinner' : edit ? 'send' : capture.phase === 'finalizing' || capture.phase === 'requesting'
+        <AppIcon name={savingEdit || checkingEdit ? 'spinner' : edit ? 'send' : capture.phase === 'finalizing' || capture.phase === 'requesting'
           ? 'recording-pending' : hasText || capture.phase === 'ready' || capture.phase === 'recording'
             ? 'send' : 'microphone'} className={savingEdit || checkingEdit ? 'auth-spinner' : undefined} />
       </button>

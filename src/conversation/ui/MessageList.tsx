@@ -53,7 +53,7 @@ export function MessageList({ controller, snapshot, view, items, title, onOpenPh
     const problem = state.state === 'failed' && own ? state.error : undefined;
     return <div className="conversation-gap" key={target}>
       {problem && <p className="conversation-history-error" role="alert">{errorT($ => $[problem.messageCode], problem.messageParams)}</p>}
-      <button type="button" className="conversation-history-button" disabled={busy || (problem !== undefined && !problem.retryable)}
+      <button type="button" className="glass-control conversation-history-button" disabled={busy || (problem !== undefined && !problem.retryable)}
         onClick={() => { window.captureAnchor(); void controller.loadGap(gap.query); }}>
         {state.state === 'pending' && own ? t($ => $.history.loading) : problem ? t($ => $.history.retry) : t($ => $.history.gap)}
       </button>
@@ -63,7 +63,7 @@ export function MessageList({ controller, snapshot, view, items, title, onOpenPh
     <div ref={leading} className="conversation-history-leading">
       {view.older.error && <p className="conversation-history-error" role="alert">{t($ => $.history.failed)}<br />
         {errorT($ => $[view.older.error!.messageCode], view.older.error.messageParams)}</p>}
-      {(view.older.enabled || view.older.pending) && <button type="button" className="conversation-history-button" disabled={busy} onClick={loadOlder}>
+      {(view.older.enabled || view.older.pending) && <button type="button" className="glass-control conversation-history-button" disabled={busy} onClick={loadOlder}>
         {view.older.pending ? t($ => $.history.loading) : view.older.error ? t($ => $.history.retry) : t($ => $.history.older)}
       </button>}
     </div>

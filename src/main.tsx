@@ -5,6 +5,7 @@ import { ScreenBoundary } from './app/ScreenBoundary';
 import { createRoot } from 'react-dom/client';
 import { App } from './app/App';
 import './styles/app.css';
+import './styles/glass-controls.css';
 
 const container = document.getElementById('root');
 

@@ -187,22 +187,22 @@ export function ChatScreen({ controller, onBack, onReconnect, initialHeader, not
         {view.initial.pending ? <AppStatus loading message={t($ => $.state.loading)} /> : <div className="conversation-notice" role={view.initial.error ? 'alert' : 'status'}>
           <p>{snapshot.phase === 'error' ? t($ => $.state.failed) : snapshot.phase === 'suspended' ? t($ => $.state.suspended) : t($ => $.state.closed)}</p>
           {view.initial.error && <p>{errorT($ => $[view.initial.error!.messageCode], view.initial.error.messageParams)}</p>}
-          {reconnect && <button type="button" className="conversation-history-button" onClick={() => { void onReconnect?.(); }}>{t($ => $.state.reconnect)}</button>}
-          {!reconnect && view.initial.retryable && <button type="button" className="conversation-history-button" onClick={() => { void controller.retry(); }}>{commonT($ => $.retry)}</button>}
+          {reconnect && <button type="button" className="glass-control conversation-history-button" onClick={() => { void onReconnect?.(); }}>{t($ => $.state.reconnect)}</button>}
+          {!reconnect && view.initial.retryable && <button type="button" className="glass-control conversation-history-button" onClick={() => { void controller.retry(); }}>{commonT($ => $.retry)}</button>}
         </div>}
       </div>}
     {searchOpen && search.count > 1 && <div className="conversation-search-nav" onPointerDown={event => {
       if (event.button === 0 && document.activeElement === searchInput.current) event.preventDefault();
     }}>
-      <button type="button" className="conversation-control" aria-label={t($ => $.searchPanel.previous)}
+      <button type="button" className="glass-control conversation-control" aria-label={t($ => $.searchPanel.previous)}
         onClick={() => controller.moveSearchMatch('previous')}><JumpArrow up /></button>
-      <button type="button" className="conversation-control" aria-label={t($ => $.searchPanel.next)}
+      <button type="button" className="glass-control conversation-control" aria-label={t($ => $.searchPanel.next)}
         onClick={() => controller.moveSearchMatch('next')}><JumpArrow /></button>
     </div>}
     {!searchOpen && snapshot.phase === 'ready' && !snapshot.position.atLatest && !view.empty && <div className="conversation-latest">
       {latestError && <p className="conversation-latest-error" role="alert">
         {errorT($ => $[latestError!.messageCode], latestError.messageParams)}</p>}
-      <button type="button" className="conversation-control conversation-latest-button" disabled={snapshot.composer.verification?.state === 'checking' || snapshot.older.state === 'pending' || snapshot.newer.state === 'pending' ||
+      <button type="button" className="glass-control conversation-control conversation-latest-button" disabled={snapshot.composer.verification?.state === 'checking' || snapshot.older.state === 'pending' || snapshot.newer.state === 'pending' ||
         (snapshot.newer.state === 'failed' && snapshot.newer.target === 'read' && !snapshot.newer.error.retryable)}
         aria-busy={snapshot.newer.state === 'pending' && snapshot.newer.target === 'read'}
         aria-label={snapshot.newer.state === 'pending' && snapshot.newer.target === 'read' ? t($ => $.latest.loading)

@@ -45,7 +45,7 @@ export function VoiceMessage({ voice, loadVoice, signal }: VoiceMessageProps) {
   const label = loading ? t($ => $.voice.loading) : playing ? t($ => $.voice.pause) : failed ? t($ => $.voice.retryPlayback) : t($ => $.voice.play);
   return <div className={'conversation-voice-message' + (failed ? ' is-error' : '')}>
     <div className="conversation-voice">
-      <button type="button" className="conversation-voice-play" disabled={!available || signal?.aborted} aria-label={label}
+      <button type="button" className="glass-control conversation-voice-play" disabled={!available || signal?.aborted} aria-label={label}
         aria-pressed={playing} aria-busy={loading} onPointerDown={event => event.preventDefault()} onClick={() => {
           if (loading) player.stop(); else if (playing) player.pause(); else void player.play();
         }}>

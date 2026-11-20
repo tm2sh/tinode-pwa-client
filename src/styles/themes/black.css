@@ -17,7 +17,7 @@
   --text-primary: #f2f2f2;
 
   /* App canvas */
-  --canvas-background: #000;
+  --canvas-background: #1c1c1c;
   --canvas-image: none;
 
   /* Controls and panels */
@@ -55,25 +55,25 @@
   /* Conversation and settings */
   --glass-fill: #6a6a6a55;
   --glass-button-background: #6a6a6a44;
-  --composer-glass-background: linear-gradient(180deg, #7c7c8052 0%, #6a6a7047 24%, #66666e3d 65%, #76767c4d 100%);
-  --composer-glass-ink: #fafafa;
-  --composer-glass-placeholder: #929292;
-  --composer-glass-shadow: 0 calc(var(--chat-header-control-size) / 40) calc(var(--chat-header-control-size) / 10) #0008;
-  --composer-rim-unit: calc(var(--chat-header-control-size) / 120);
-  --composer-rim-mask: linear-gradient(180deg, #000 10%, transparent 42% 58%, #000 90%);
-  --composer-rim-shadow:
-    inset 0 var(--composer-rim-unit) 0 #ffffff22,
-    inset 0 calc(var(--composer-rim-unit) * -1) 0 #ffffff22,
-    inset 0 calc(var(--composer-rim-unit) * 2) 0 #ffffff1a,
-    inset 0 calc(var(--composer-rim-unit) * -2) 0 #ffffff1a,
-    inset 0 calc(var(--composer-rim-unit) * 3) 0 #ffffff1d,
-    inset 0 calc(var(--composer-rim-unit) * -3) 0 #ffffff1d,
-    inset 0 calc(var(--composer-rim-unit) * 4) 0 #ffffff12,
-    inset 0 calc(var(--composer-rim-unit) * -4) 0 #ffffff12,
-    inset 0 calc(var(--composer-rim-unit) * 9) calc(var(--composer-rim-unit) * 12) calc(var(--composer-rim-unit) * -8) #ffffff18,
-    inset 0 calc(var(--composer-rim-unit) * -9) calc(var(--composer-rim-unit) * 12) calc(var(--composer-rim-unit) * -8) #ffffff18;
-  --message-fill: #232323;
-  --message-own-fill: #363636;
+  --glass-control-background: linear-gradient(180deg, #7c7c8052 0%, #6a6a7047 24%, #66666e3d 65%, #76767c4d 100%);
+  --glass-control-ink: #fafafa;
+  --glass-control-muted: #929292;
+  --glass-control-shadow-color: #0008;
+  --glass-control-filter: blur(42px) saturate(1.7);
+  --glass-control-rim-mask: linear-gradient(180deg, #000 10%, transparent 42% 58%, #000 90%);
+  --glass-rim-step-1: #ffffff22;
+  --glass-rim-step-2: #ffffff1a;
+  --glass-rim-step-3: #ffffff1d;
+  --glass-rim-step-4: #ffffff12;
+  --glass-rim-glow: #ffffff18;
+  --glass-control-label-size: 17px;
+  --glass-control-label-weight: 400;
+  --glass-control-title-size: 20px;
+  --glass-control-title-weight: 600;
+  --glass-control-subtitle-size: 13px;
+  --glass-control-input-size: 16px;
+  --message-fill: #323232;
+  --message-own-fill: #707070;
   --message-edge: transparent;
   --glass-highlight-layer: none;
   --date-fill: #ffffff1b;

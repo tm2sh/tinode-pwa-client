@@ -1,0 +1,83 @@
+.app-icon-glass { display: none; }
+
+:where(:root:is([data-palette="black"], [data-palette="white"])) .glass-control {
+  position: relative;
+  isolation: isolate;
+}
+
+:root:is([data-palette="black"], [data-palette="white"]) .glass-control {
+  --glass-rim-unit: calc(var(--glass-control-size, var(--chat-header-control-size)) / 120);
+  --search-muted: var(--glass-control-muted);
+  border-color: transparent;
+  color: var(--glass-control-ink);
+  background: var(--glass-control-background);
+  box-shadow: var(--glass-control-box-shadow, 0 calc(var(--glass-rim-unit) * 3) calc(var(--glass-rim-unit) * 12) var(--glass-control-shadow-color));
+  -webkit-backdrop-filter: var(--glass-control-filter);
+  backdrop-filter: var(--glass-control-filter);
+  font-family: inherit;
+  font-size: var(--glass-control-label-size);
+  font-weight: var(--glass-control-label-weight);
+  letter-spacing: -.2px;
+}
+
+:root:is([data-palette="black"], [data-palette="white"]) .glass-control::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--glass-control-rim-background, transparent);
+  padding: var(--glass-control-rim-padding, 0px);
+  pointer-events: none;
+  -webkit-mask: var(--glass-control-rim-mask);
+  mask: var(--glass-control-rim-mask);
+  -webkit-mask-composite: var(--glass-control-rim-webkit-composite, source-over);
+  mask-composite: var(--glass-control-rim-composite, add);
+  box-shadow: var(--glass-control-rim-shadow,
+    inset 0 var(--glass-rim-unit) 0 var(--glass-rim-step-1),
+    inset 0 calc(var(--glass-rim-unit) * -1) 0 var(--glass-rim-step-1),
+    inset 0 calc(var(--glass-rim-unit) * 2) 0 var(--glass-rim-step-2),
+    inset 0 calc(var(--glass-rim-unit) * -2) 0 var(--glass-rim-step-2),
+    inset 0 calc(var(--glass-rim-unit) * 3) 0 var(--glass-rim-step-3),
+    inset 0 calc(var(--glass-rim-unit) * -3) 0 var(--glass-rim-step-3),
+    inset 0 calc(var(--glass-rim-unit) * 4) 0 var(--glass-rim-step-4),
+    inset 0 calc(var(--glass-rim-unit) * -4) 0 var(--glass-rim-step-4),
+    inset 0 calc(var(--glass-rim-unit) * 9) calc(var(--glass-rim-unit) * 12) calc(var(--glass-rim-unit) * -8) var(--glass-rim-glow),
+    inset 0 calc(var(--glass-rim-unit) * -9) calc(var(--glass-rim-unit) * 12) calc(var(--glass-rim-unit) * -8) var(--glass-rim-glow));
+}
+
+:root:is([data-palette="black"], [data-palette="white"]) .glass-control-danger {
+  --glass-control-ink: var(--danger-soft, var(--error-text));
+}
+
+:root:is([data-palette="black"], [data-palette="white"]) .glass-control .app-icon-default { display: none; }
+:root:is([data-palette="black"], [data-palette="white"]) .glass-control .app-icon-glass { display: inline; }
+:root:is([data-palette="black"], [data-palette="white"]) .glass-control > svg.app-icon-composer { width: 66.666667%; height: 66.666667%; }
+
+:root:is([data-palette="black"], [data-palette="white"]) .glass-control :where(input, textarea, .conversation-message-measure) {
+  font-family: inherit;
+  font-size: var(--glass-control-input-size);
+  font-weight: 400;
+  color: var(--glass-control-ink);
+}
+:root:is([data-palette="black"], [data-palette="white"]) .glass-control :where(input, textarea)::placeholder {
+  color: var(--glass-control-muted);
+  -webkit-text-fill-color: var(--glass-control-muted);
+  opacity: 1;
+}
+:root:is([data-palette="black"], [data-palette="white"]) .glass-control .conversation-message-editor {
+  --conversation-ink: var(--glass-control-ink);
+  --conversation-muted: var(--glass-control-muted);
+}
+:root:is([data-palette="black"], [data-palette="white"]) .glass-control .glass-control-title {
+  font-size: var(--glass-control-title-size);
+  font-weight: var(--glass-control-title-weight);
+  line-height: 1.2;
+  letter-spacing: -.35px;
+}
+:root:is([data-palette="black"], [data-palette="white"]) .glass-control .glass-control-subtitle {
+  font-size: var(--glass-control-subtitle-size);
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--glass-control-muted);
+}

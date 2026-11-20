@@ -49,14 +49,14 @@ export function PhotoDialog({ controller, photo, returnFocus, onClose }: {
   return <dialog ref={dialog} className="conversation-photo-dialog" aria-label={t($ => $.viewerTitle)}
     onCancel={event => { event.preventDefault(); onClose(); }}
     onClick={event => { if (event.target === event.currentTarget) onClose(); }}>
-    <button autoFocus type="button" className="conversation-control conversation-photo-close"
+    <button autoFocus type="button" className="glass-control conversation-control conversation-photo-close"
       aria-label={t($ => $.close)} onClick={onClose}>
       <AppIcon name="close-wide" />
     </button>
     {Viewer ? <Viewer controller={controller} photo={photo} />
       : viewer.failed ? <div className="conversation-photo-viewer-status">
         <p role="alert">{t($ => $.viewerFailed)}</p>
-        <button type="button" className="conversation-history-button" onClick={() => retry(value => value + 1)}>{commonT($ => $.retry)}</button>
+        <button type="button" className="glass-control conversation-history-button" onClick={() => retry(value => value + 1)}>{commonT($ => $.retry)}</button>
       </div> : <PhotoLoading />}
   </dialog>;
 }

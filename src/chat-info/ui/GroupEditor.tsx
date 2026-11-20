@@ -52,12 +52,12 @@ export function GroupEditor({ name, avatar, topicKey, maxMessageSize, busy, oper
     <label className="settings-editor-label" htmlFor={nameId}>{t($ => $.edit.groupName)}</label>
     <input id={nameId} className="settings-editor-name" value={value} disabled={locked}
       onChange={event => setNameDraft(event.currentTarget.value)} />
-    <button type="submit" className="settings-editor-action settings-editor-save" disabled={!canSave} aria-busy={saving}>
+    <button type="submit" className="glass-control settings-editor-action settings-editor-save" disabled={!canSave} aria-busy={saving}>
       {saving ? t($ => $.edit.saving) : t($ => $.edit.save)}
     </button>
     {error && <p className="settings-editor-error" role="alert">{errorText($ => $[error.messageCode])}</p>}
     {(operation?.state === 'unknown' || checking) &&
-      <button type="button" className="settings-editor-action" disabled={locked || preparing}
+      <button type="button" className="glass-control settings-editor-action" disabled={locked || preparing}
         onClick={() => { void check(); }} aria-busy={checking}>
         {checking ? t($ => $.edit.checking) : t($ => $.edit.check)}
       </button>}

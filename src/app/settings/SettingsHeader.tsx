@@ -32,7 +32,7 @@ export function SettingsHeader({ title, titleId, onBack, backDisabled, action }:
   return <header className="settings-header">
     <BackButton className="settings-back" onBack={onBack} disabled={backDisabled} />
     <h1 id={titleId}>{title}</h1>
-    {action && <button type="button" className="settings-header-action" aria-label={action.label}
+    {action && <button type="button" className="glass-control settings-header-action" aria-label={action.label}
       disabled={action.disabled} onClick={action.onClick}><span>{shortenActionLabel(action.label)}</span></button>}
   </header>;
 }

@@ -50,8 +50,8 @@ export function MemberRemovalDialog({ name, trigger, fallback, onClose, onConfir
       <h2 id={titleId} className="chat-info-remove-title">{t($ => $.members.removeConfirm, { name })}</h2>
       {error && <div className="chat-info-error"><p role="alert">{errorT($ => $[error.messageCode])}</p></div>}
       <div className="chat-info-remove-actions">
-        <button type="button" disabled={pending} autoFocus onClick={onClose}>{commonT($ => $.cancel)}</button>
-        <button type="button" className="is-destructive" disabled={pending || error?.retryable === false}
+        <button type="button" className="glass-control" disabled={pending} autoFocus onClick={onClose}>{commonT($ => $.cancel)}</button>
+        <button type="button" className="glass-control glass-control-danger is-destructive" disabled={pending || error?.retryable === false}
           onClick={() => { void confirm(); }}>
           {pending ? t($ => $.members.removing) : t($ => $.members.removeAction)}
         </button>

@@ -78,7 +78,7 @@ export function ProfilePreferences() {
       {pending && <p className="profile-language-status" role="status">{t($ => $.appearance.language.loading)}</p>}
       {failedLanguage && <div className="profile-language-feedback">
         {!pending && <p className="profile-error" role="alert">{t($ => $.appearance.language.failed)}</p>}
-        <button ref={retryButton} className="profile-retry" type="button" aria-disabled={pending || undefined}
+        <button ref={retryButton} className="glass-control profile-retry" type="button" aria-disabled={pending || undefined}
           onClick={() => { void selectLanguage(failedLanguage); }}>{commonT($ => $.retry)}</button>
       </div>}
     </div>

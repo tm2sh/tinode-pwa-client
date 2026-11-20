@@ -85,7 +85,7 @@ export function AddContactScreen({ openPort, contactOpening, onOpenContact, onBa
             void submit();
           }
         }} />
-      <button type="button" className="header-glass-button" aria-label={t($ => $.search)}
+      <button type="button" className="glass-control header-glass-button" aria-label={t($ => $.search)}
         disabled={!query.trim() || result.state === 'searching' || opening} onClick={() => { void submit(); }}>
         <AppIcon name="search" />
       </button>

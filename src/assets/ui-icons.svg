@@ -3,6 +3,15 @@
     <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" opacity=".25"/>
     <path d="M12 3a9 9 0 0 1 9 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
   </symbol>
+  <symbol id="back-glass" viewBox="26.4 26.4 79.2 79.2" stroke-width="7">
+    <path d="m73 43-23 23 23 23"/>
+  </symbol>
+  <symbol id="search-glass" viewBox="26.4 26.4 79.2 79.2" stroke-width="4.5">
+    <circle cx="62" cy="62" r="23"/><path d="m79 79 19 19"/>
+  </symbol>
+  <symbol id="plus-glass" viewBox="26.4 26.4 79.2 79.2" stroke-width="7.5">
+    <path d="M66 36v60M36 66h60"/>
+  </symbol>
   <symbol id="back" viewBox="0 0 24 24">
     <path d="m14 5-7 7 7 7"/>
   </symbol>

@@ -61,7 +61,7 @@ export default function PhotoViewer({ controller, photo }: PhotoViewerProps) {
       }} onError={failed} />
     {state.kind === 'failed' ? <div className="conversation-photo-viewer-status">
       <p role="alert">{message}</p>
-      <button type="button" className="conversation-history-button" onClick={() => retry(value => value + 1)}>{commonT($ => $.retry)}</button>
+      <button type="button" className="glass-control conversation-history-button" onClick={() => retry(value => value + 1)}>{commonT($ => $.retry)}</button>
     </div> : !decoded && <div className="conversation-photo-viewer-status" role="status">
       <AppIcon name="spinner" className="auth-spinner" />
       <p>{t($ => $.viewerLoading)}</p>

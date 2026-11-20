@@ -140,7 +140,7 @@ export function CreateGroupScreen({ kind, chatList, openPort, onRun, onOpen, onB
     </p>}
     {!busy && progress?.state === 'unconfirmed' && <div className="group-create-result">
       <p className="settings-editor-error" role="alert">{t($ => isChannel ? $.channel.unconfirmed : $.unconfirmed)}</p>
-      <button type="button" className="settings-editor-action" onClick={() => { void run(); }}>{t($ => $.check)}</button>
+      <button type="button" className="glass-control settings-editor-action" onClick={() => { void run(); }}>{t($ => $.check)}</button>
     </div>}
     {!busy && created && (created.issues.length > 0 || created.attachmentUncertain || openFailed) &&
       <div className="group-create-result">
@@ -154,8 +154,8 @@ export function CreateGroupScreen({ kind, chatList, openPort, onRun, onOpen, onB
           {t($ => isChannel ? $.channel.openFailed : $.openFailed)}
         </p>}
         {created.issues.length > 0 &&
-          <button type="button" className="settings-editor-action" onClick={() => { void run(); }}>{t($ => $.retry)}</button>}
-        <button type="button" className="settings-editor-action" onClick={() => { void run(true); }}>
+          <button type="button" className="glass-control settings-editor-action" onClick={() => { void run(); }}>{t($ => $.retry)}</button>}
+        <button type="button" className="glass-control settings-editor-action" onClick={() => { void run(true); }}>
           {t($ => isChannel ? $.channel.open : $.open)}
         </button>
       </div>}

@@ -72,7 +72,7 @@ export function ProfilePanel({ profile, onRetryProfile, onProfileSaved, openOwnP
             </div>}
             {displayed?.state === 'unavailable' && !retrying && <>
               <p className="profile-error" role="alert">{errorT($ => $[displayed.error.messageCode])}</p>
-              {displayed.error.retryable && <button className="profile-retry" type="button" onClick={() => { void retry(); }}>
+              {displayed.error.retryable && <button className="glass-control profile-retry" type="button" onClick={() => { void retry(); }}>
                 {commonT($ => $.retry)}
               </button>}
             </>}
@@ -83,7 +83,7 @@ export function ProfilePanel({ profile, onRetryProfile, onProfileSaved, openOwnP
           <SettingsSwitch checked={false} labelId={notificationsLabelId} disabled />
         </div>
         <ProfilePreferences />
-        <button className="profile-logout" type="button" onClick={onLogout}>
+        <button className="glass-control glass-control-danger profile-logout" type="button" onClick={onLogout}>
           <AppIcon name="logout" />
           <span>{t(($) => $.logout)}</span>
         </button>

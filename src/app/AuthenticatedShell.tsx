@@ -268,13 +268,13 @@ function AuthenticatedShellInstance({ warning, onLogout, openChatListPort, openO
   return <>
     <section className="chats-screen chats-overlay-screen" aria-labelledby={titleId} hidden={route.kind !== 'list'}>
       <header className="chats-header" ref={headerRef}>
-        {!searchOpen && <button className="header-glass-button chats-profile-button" type="button" aria-label={view.profile.openLabel} onClick={openProfile}>
+        {!searchOpen && <button className="glass-control header-glass-button chats-profile-button" type="button" aria-label={view.profile.openLabel} onClick={openProfile}>
           <ChatAvatar avatar={view.profile.avatar} name={view.profile.name} />
         </button>}
         <h1 id={titleId} aria-label={view.title} hidden={searchOpen}>
-          {clientConfig.chatCreationEnabled ? <button className="header-glass-pill chats-create-button" type="button"
+          {clientConfig.chatCreationEnabled ? <button className="glass-control header-glass-pill chats-create-button" type="button"
             aria-label={t($ => $.openCreation)} onClick={openChatCreation}>
-            <span>{view.title}</span>
+            <span className="glass-control-title">{view.title}</span>
             <AppIcon name="plus" />
           </button> : view.title}
         </h1>

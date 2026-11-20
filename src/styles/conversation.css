@@ -3,7 +3,12 @@
 .conversation-bubble {
   position: relative;
   --conversation-fill: var(--message-fill, var(--glass-fill));
-  border: 1px solid var(--message-edge, var(--conversation-edge)); box-shadow: var(--glass-box-shadow);
+  --conversation-ink: var(--message-ink, var(--text-primary));
+  --conversation-muted: var(--message-muted, var(--text-secondary));
+  --conversation-accent: var(--message-accent, var(--accent-text));
+  --glass-control-ink: var(--message-control-ink, var(--icon-ink));
+  color: var(--conversation-ink);
+  border: 1px solid var(--message-edge, var(--conversation-edge)); box-shadow: var(--message-box-shadow, var(--glass-box-shadow));
   background: var(--glass-highlight-layer), var(--conversation-fill);
   -webkit-backdrop-filter: var(--conversation-filter); backdrop-filter: var(--conversation-filter);
 }
@@ -25,6 +30,13 @@
 .conversation-item.is-personal .conversation-bubble { min-width: min(188px, 94%); max-width: 94%; }
 .conversation-item.is-outgoing .conversation-row { justify-content: flex-end; }
 .conversation-item.is-outgoing .conversation-bubble { --conversation-fill: var(--conversation-own-fill); }
+.conversation-item.is-outgoing .conversation-bubble,
+.anchored-action-highlight[data-alignment="end"] .conversation-bubble {
+  --conversation-ink: var(--message-own-ink, var(--message-ink, var(--text-primary)));
+  --conversation-muted: var(--message-own-muted, var(--message-muted, var(--text-secondary)));
+  --conversation-accent: var(--message-own-accent, var(--message-accent, var(--accent-text)));
+  --glass-control-ink: var(--message-own-control-ink, var(--message-control-ink, var(--icon-ink)));
+}
 .conversation-item.is-incoming.series-middle .conversation-bubble, .conversation-item.is-incoming.series-last .conversation-bubble { border-top-left-radius: 6px; }
 .conversation-item.is-incoming.series-first .conversation-bubble, .conversation-item.is-incoming.series-middle .conversation-bubble { border-bottom-left-radius: 6px; }
 .conversation-item.is-outgoing.series-middle .conversation-bubble, .conversation-item.is-outgoing.series-last .conversation-bubble { border-top-right-radius: 6px; }
@@ -61,7 +73,7 @@
 }
 .conversation-message-field { display: flex; align-items: center; min-width: 0; min-height: var(--conversation-control); padding: 0 21px; border-radius: calc(var(--conversation-control) / 2); }
 .conversation-message-editor {
-  --editor-line-height: 22px;
+  --editor-line-height: var(--glass-control-input-line-height, 22px);
   --editor-heading-height: 0px;
   --editor-padding: calc((var(--conversation-control) - var(--editor-line-height) - 2px) / 2);
   --editor-max-height: min(
@@ -215,26 +227,4 @@ button.conversation-photo:disabled { cursor: default; }
   display: block; margin: 3px auto 0; min-height: 30px; padding: 2px 8px;
   border: 0; background: none; color: inherit; font: inherit; text-decoration: underline;
   cursor: pointer; pointer-events: auto;
-}
-
-
-.conversation-composer .conversation-composer-icon-glass { display: none; }
-:root[data-palette="black"] .conversation-composer .conversation-composer-icon-default { display: none; }
-:root[data-palette="black"] .conversation-composer .conversation-composer-icon-glass {
-  display: block; width: 66.666667%; height: 66.666667%;
-}
-:root[data-palette="black"] .conversation-composer > :is(.conversation-control, .conversation-message-field) {
-  position: relative; isolation: isolate; border-color: transparent;
-  color: var(--composer-glass-ink); background: var(--composer-glass-background);
-  box-shadow: var(--composer-glass-shadow);
-}
-:root[data-palette="black"] .conversation-composer > :is(.conversation-control, .conversation-message-field)::before {
-  content: ''; position: absolute; inset: -1px; z-index: -1;
-  border-radius: inherit; background: transparent; pointer-events: none;
-  -webkit-mask-image: var(--composer-rim-mask); mask-image: var(--composer-rim-mask);
-  box-shadow: var(--composer-rim-shadow);
-}
-:root[data-palette="black"] .conversation-composer .conversation-message-field {
-  --conversation-ink: var(--composer-glass-ink);
-  --conversation-muted: var(--composer-glass-placeholder);
 }

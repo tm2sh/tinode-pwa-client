@@ -13,6 +13,6 @@ export function VoiceCapturePopup({ code, onClose }: { readonly code: ErrorMessa
   return <dialog ref={dialog} className="conversation-voice-popup" aria-labelledby={title} aria-describedby={description}
     onCancel={event => { event.preventDefault(); onClose(); }} onClick={event => { if (event.target === event.currentTarget) onClose(); }}>
     <div><h2 id={title}>{t($ => $.voice.popupTitle)}</h2><p id={description}>{errorT($ => $[code])}</p>
-      <button type="button" autoFocus className="conversation-history-button" onClick={onClose}>{t($ => $.voice.closePopup)}</button></div>
+      <button type="button" autoFocus className="glass-control conversation-history-button" onClick={onClose}>{t($ => $.voice.closePopup)}</button></div>
   </dialog>;
 }

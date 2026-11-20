@@ -5,35 +5,36 @@
   /* Shared colors */
   --error-text: #a32e48;
   --accent-text: #252525;
-  --text-secondary: #555;
-  --glass-edge: transparent;
+  --text-secondary: #929295;
+  --glass-edge: #dedede;
   --glass-background: var(--glass-fill);
-  --glass-box-shadow: 0 8px 24px #00000012;
-  --action-background: #b5b5b586;
-  --scrim-strong: #ffffff57;
-  --scrim-medium: #ffffff2e;
-  --scrim-soft: #ffffff0f;
-  --text-primary: #1c1c1c;
+  --glass-box-shadow: 0 7px 22px #00000003;
+  --action-background: #ffffffbd;
+  --scrim-strong: #fff;
+  --scrim-medium: #ffffff80;
+  --scrim-soft: transparent;
+  --edge-scrim-control-factor: 0;
+  --text-primary: #111;
 
   /* App canvas */
   --canvas-background: #fff;
   --canvas-image: none;
 
   /* Controls and panels */
-  --panel-background: #edededd6;
-  --panel-button-background: #e1e1e1ab;
-  --field-divider: #00000020;
+  --panel-background: #f1f0f5db;
+  --panel-button-background: #ffffffbd;
+  --field-divider: #00000014;
   --error-edge: #bc3a5533;
   --error-background: #fff1f3b3;
   --error-stripe: #bc3a55;
-  --icon-ink: #000;
+  --icon-ink: #111;
   --send-icon: var(--icon-ink);
 
   /* Chat cards */
   --chat-card-edge: transparent;
-  --chat-card-background: #00000019;
-  --chat-card-box-shadow: 0 6px 16px #0000000a;
-  --chat-card-muted: #555;
+  --chat-card-background: #f1f0f5;
+  --chat-card-box-shadow: none;
+  --chat-card-muted: #77777b;
   --chat-preview-text: #303030;
   --unread-muted-text: #454545;
   --unread-muted-background: #d8d8d8;
@@ -42,46 +43,74 @@
   --chat-error-edge: #bc3a5552;
 
   /* Dialogs and menus */
-  --chat-selection-background: linear-gradient(var(--chat-card-background) 0 0), var(--canvas-background);
+  --chat-selection-background: var(--chat-card-background);
   --confirmation-muted: var(--text-secondary);
   --menu-backdrop: #00000039;
-  --menu-edge: transparent;
-  --menu-background: linear-gradient(var(--glass-fill) 0 0), var(--canvas-background);
-  --menu-box-shadow: var(--glass-box-shadow);
+  --menu-edge: #dedede;
+  --menu-background: #ffffffeb;
+  --menu-box-shadow: 0 8px 24px #00000012;
   --menu-divider: var(--field-divider);
   --danger-text: #b52234;
-  --menu-hover: #00000014;
+  --menu-hover: #00000008;
 
   /* Conversation and settings */
-  --glass-fill: #a5a5a555;
-  --glass-button-background: #a5a5a544;
-  --message-fill: #e1e1e1;
-  --message-own-fill: #d2d2d2;
+  --glass-fill: #f1f0f5db;
+  --glass-button-background: linear-gradient(180deg, #ffffffdb, #ffffffbd);
+  --glass-control-background: var(--glass-button-background);
+  --glass-control-ink: #111;
+  --glass-control-muted: #999;
+  --glass-control-box-shadow: 0 7px 22px #00000003;
+  --glass-control-filter: blur(24px) saturate(1.05);
+  --glass-control-rim-background: linear-gradient(180deg, #e4e4e4 0%, #c6c6c6 47%, #dedede 100%);
+  --glass-control-rim-padding: 1px;
+  --glass-control-rim-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  --glass-control-rim-webkit-composite: xor;
+  --glass-control-rim-composite: exclude;
+  --glass-control-rim-shadow: none;
+  --glass-control-label-size: 17px;
+  --glass-control-label-weight: 400;
+  --glass-control-title-size: 19px;
+  --glass-control-title-weight: 600;
+  --glass-control-subtitle-size: 12px;
+  --glass-control-input-size: 18px;
+  --glass-control-input-line-height: 24px;
+  --message-fill: #f1f0f5;
+  --message-own-fill: #178dfb;
+  --message-edge: transparent;
+  --message-box-shadow: none;
+  --message-ink: #111;
+  --message-muted: #959599;
+  --message-accent: #1684eb;
+  --message-control-ink: #111;
+  --message-own-ink: #fff;
+  --message-own-muted: #ffffffa8;
+  --message-own-accent: #fff;
+  --message-own-control-ink: #111;
   --glass-highlight-layer: none;
-  --date-fill: #0000001b;
+  --date-fill: transparent;
   --date-edge: transparent;
-  --author-0-text: #363636;
-  --author-1-text: #363636;
-  --author-2-text: #363636;
-  --author-3-text: #363636;
-  --code-fill: #00000016;
-  --highlight-fill: #00000019;
-  --attachment-fill: #00000015;
+  --author-0-text: #65636c;
+  --author-1-text: #65636c;
+  --author-2-text: #65636c;
+  --author-3-text: #65636c;
+  --code-fill: #0000000d;
+  --highlight-fill: #00000015;
+  --attachment-fill: #00000008;
   --readonly-shadow: #ffffff99;
   --inline-error-fill: #fff5f6ee;
-  --delivery-text: #555;
-  --read-text: #262626;
+  --delivery-text: #ffffffa8;
+  --read-text: #fff;
   --search-hit-fill: #00000025;
   --menu-selected-message: var(--message-fill);
   --menu-selected-own-message: var(--message-own-fill);
-  --feedback-background: #f1f1f1f5;
+  --feedback-background: #f1f0f5f5;
   --selection-icon: #fff;
-  --selection-background: #c4c4c4;
+  --selection-background: #f1f0f5;
   --selection-edge: transparent;
   --danger-soft: #b9334b;
-  --switch-off: #00000048;
-  --list-divider: #0000001c;
-  --wave-fill: #555;
+  --switch-off: #00000030;
+  --list-divider: #00000014;
+  --wave-fill: #1684eb;
 
   /* Avatar, unread and media accents */
   --avatar-fill: #454545;
@@ -101,10 +130,10 @@
   --unread-jump-fill: #5c5c5c;
   --media-overlay: #fffffff2;
   --media-overlay-text: var(--text-primary);
-  --play-background: #adadadcc;
+  --play-background: #ffffffbd;
   --play-icon: var(--icon-ink);
-  --play-shadow: 0 4px 10px #00000014;
-  --media-control-edge: transparent;
-  --media-overlay-control-edge: transparent;
-  --media-overlay-button-background: #00000012;
+  --play-shadow: 0 7px 22px #00000003;
+  --media-control-edge: #dedede;
+  --media-overlay-control-edge: #dedede;
+  --media-overlay-button-background: #ffffffbd;
 }

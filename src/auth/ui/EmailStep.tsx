@@ -95,7 +95,7 @@ export function EmailStep({ challenge, busy = false, error, onSubmit, onEdit }: 
         </div>
       </div>
       <p className="auth-error" id={errorId} role="alert" hidden={!message}>{message}</p>
-      <button className="auth-submit" type="submit" disabled={waiting || !onSubmit}>
+      <button className="glass-control auth-submit" type="submit" disabled={waiting || !onSubmit}>
         <AppIcon name="spinner" className={waiting ? 'auth-spinner' : 'auth-spinner is-hidden'} />
         <span aria-live="polite">{waiting ? t(($) => $.email.submitting) : t(($) => $.email.submit)}</span>
       </button>

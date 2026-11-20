@@ -22,7 +22,7 @@ export function AppStatus({ message, loading = false, role = 'status', onBack, b
         <AppIcon name="spinner" className="auth-spinner" />
         <p className="app-loading-message" role="status">{message}</p>
       </div>
-      {onBack && <button className="app-status-button app-loading-back" type="button" onClick={onBack}>
+      {onBack && <button className="glass-control app-status-button app-loading-back" type="button" onClick={onBack}>
         {backLabel ?? t(($) => $.backToLogin)}
       </button>}
     </section>
@@ -34,8 +34,8 @@ export function AppStatus({ message, loading = false, role = 'status', onBack, b
           <h1>{clientConfig.appName}</h1>
           <p role={role}>{message}</p>
         </header>
-        {onRetry && <button className="app-status-button" type="button" onClick={onRetry}>{retryLabel ?? t(($) => $.retry)}</button>}
-        {onBack && <button className="app-status-button" type="button" onClick={onBack}>{backLabel ?? t(($) => $.backToLogin)}</button>}
+        {onRetry && <button className="glass-control app-status-button" type="button" onClick={onRetry}>{retryLabel ?? t(($) => $.retry)}</button>}
+        {onBack && <button className="glass-control app-status-button" type="button" onClick={onBack}>{backLabel ?? t(($) => $.backToLogin)}</button>}
       </div>
     </section>
   );

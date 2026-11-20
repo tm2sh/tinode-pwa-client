@@ -55,7 +55,7 @@
   position: absolute;
   inset: 0 0 auto;
   z-index: 2;
-  height: var(--chats-header-bottom);
+  height: calc(var(--chat-header-top) + var(--edge-scrim-control-factor, 1) * var(--chat-header-control-size));
   background: var(--chat-header-scrim);
   pointer-events: none;
 }

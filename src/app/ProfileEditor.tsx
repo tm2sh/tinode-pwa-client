@@ -85,17 +85,17 @@ export function ProfileEditor({ profile, openPort, onConfirmed }: ProfileEditorP
     <label className="settings-editor-label" htmlFor={nameId}>{t($ => $.edit.name)}</label>
     <input id={nameId} className="settings-editor-name" value={nameDraft} disabled={locked}
       autoComplete="nickname" onChange={event => setNameDraft(event.currentTarget.value)} />
-    <button type="submit" className="settings-editor-action settings-editor-save" disabled={!canSave}
+    <button type="submit" className="glass-control settings-editor-action settings-editor-save" disabled={!canSave}
       aria-busy={phase === 'saving'}>{phase === 'saving' ? t($ => $.edit.saving) : t($ => $.edit.save)}</button>
     {openFailed && <>
       <p className="settings-editor-error" role="alert">{t($ => $.edit.openFailed)}</p>
-      <button type="button" className="settings-editor-action" onClick={() => { setOpenFailed(false); setAttempt(value => value + 1); }}>
+      <button type="button" className="glass-control settings-editor-action" onClick={() => { setOpenFailed(false); setAttempt(value => value + 1); }}>
         {commonT($ => $.retry)}
       </button>
     </>}
     {problem && <p className="settings-editor-error" role="alert">{t($ => $.edit.errors[problem])}</p>}
     {(problem === 'unknown' || phase === 'checking') &&
-      <button type="button" className="settings-editor-action" disabled={phase === 'checking'}
+      <button type="button" className="glass-control settings-editor-action" disabled={phase === 'checking'}
         aria-busy={phase === 'checking'} onClick={() => { void submit(true); }}>
         {phase === 'checking' ? t($ => $.edit.checking) : t($ => $.edit.check)}
       </button>}

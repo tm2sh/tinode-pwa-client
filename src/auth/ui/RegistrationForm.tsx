@@ -201,7 +201,7 @@ export function RegistrationForm({ emailRequired, busy = false, preparing = fals
       </div>
       <p className="auth-error" id={errorId} role="alert" hidden={!message}>{message}</p>
       <div className="registration-actions">
-        <button className="auth-submit" type={onRetryRequirements ? 'button' : 'submit'}
+        <button className="glass-control auth-submit" type={onRetryRequirements ? 'button' : 'submit'}
           disabled={waiting || preparing || (!onRetryRequirements && (submissionBlocked || !onSubmit))}
           onClick={onRetryRequirements ? () => { void onRetryRequirements(); } : undefined}>
           <AppIcon name="spinner" className={waiting || preparing ? 'auth-spinner' : 'auth-spinner is-hidden'} />
@@ -209,7 +209,7 @@ export function RegistrationForm({ emailRequired, busy = false, preparing = fals
             : preparing ? t(($) => $.registration.loadingRequirements)
               : onRetryRequirements ? commonT(($) => $.retry) : t(($) => $.registration.submit)}</span>
         </button>
-        <button className="auth-submit auth-back" type="button" onClick={back}>{commonT(($) => $.backToLogin)}</button>
+        <button className="glass-control auth-submit auth-back" type="button" onClick={back}>{commonT(($) => $.backToLogin)}</button>
       </div>
     </form>
   );
