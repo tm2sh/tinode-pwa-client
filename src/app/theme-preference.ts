@@ -1,22 +1,30 @@
-export type ThemePreference = 'system' | 'light' | 'dark';
+export const themePreferences = ['system', 'dark', 'light', 'black', 'white', 'blue'] as const;
+
+export type ThemePreference = (typeof themePreferences)[number];
 
 export const themeStorageKey = 'tinode-pwa-client:theme:v1';
 
-// These two functions also run inline from the HTML head before the app loads.
-export function readStoredTheme(key: string): ThemePreference {
+// These functions also run inline from the HTML head before the app loads.
+export function readStoredTheme(key: string, preferences: readonly ThemePreference[]): ThemePreference {
   try {
     const value = window.localStorage.getItem(key);
-    return value === 'light' || value === 'dark' ? value : 'system';
+    return preferences.find(preference => preference === value) ?? 'system';
   } catch {
     return 'system';
   }
 }
 
 export function applyThemePreference(preference: ThemePreference): void {
-  document.documentElement.dataset.theme = preference;
+  const { dataset } = document.documentElement;
+  dataset.theme = preference;
+  if (preference === 'system') {
+    dataset.palette = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  } else {
+    dataset.palette = preference;
+  }
   for (const meta of document.querySelectorAll<HTMLMetaElement>('meta[data-theme-color]')) {
     const scheme = meta.dataset.themeColor;
-    if (preference === 'system') {
+    if (preference === 'system' && (scheme === 'light' || scheme === 'dark')) {
       meta.media = '(prefers-color-scheme: ' + scheme + ')';
     } else if (preference === scheme) {
       meta.removeAttribute('media');
@@ -26,9 +34,15 @@ export function applyThemePreference(preference: ThemePreference): void {
   }
 }
 
+export function watchSystemTheme(apply: typeof applyThemePreference): void {
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    if (document.documentElement.dataset.theme === 'system') apply('system');
+  });
+}
+
 export function getThemePreference(): ThemePreference {
   const value = document.documentElement.dataset.theme;
-  return value === 'light' || value === 'dark' ? value : 'system';
+  return themePreferences.find(preference => preference === value) ?? 'system';
 }
 
 export function setThemePreference(preference: ThemePreference): boolean {

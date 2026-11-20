@@ -1,8 +1,8 @@
 import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { resolve, sep } from 'node:path';
 import type { Plugin } from 'vite';
 import { languageStorageKey, readStartupLanguage } from '../src/i18n/language-preference.ts';
-import { applyThemePreference, readStoredTheme, themeStorageKey } from '../src/app/theme-preference.ts';
+import { applyThemePreference, readStoredTheme, themePreferences, themeStorageKey, watchSystemTheme } from '../src/app/theme-preference.ts';
 
 function attribute(value: string): string {
   return value.replaceAll('&', '&amp;').replaceAll('"', '&quot;')
@@ -14,6 +14,12 @@ export function bootstrapShellPlugin(language: 'ru' | 'en'): Plugin {
   return {
     name: 'tinode-bootstrap-shell',
     configResolved(config) { root = config.root; },
+    handleHotUpdate({ file, server }) {
+      if (file.startsWith(resolve(root, 'src/styles/themes') + sep)) {
+        server.ws.send({ type: 'full-reload' });
+        return [];
+      }
+    },
     transformIndexHtml: {
       order: 'pre',
       handler(html) {
@@ -30,11 +36,13 @@ export function bootstrapShellPlugin(language: 'ru' | 'en'): Plugin {
         const spinner = icons.match(/<symbol id="spinner" viewBox="0 0 24 24">([\s\S]*?)<\/symbol>/)?.[1].trim();
         if (!spinner) throw new Error('Bootstrap spinner symbol is missing.');
         // Make the initial background and spinner styles available before loading modules.
-        const styles = readFileSync(resolve(root, 'src/styles/app.css'), 'utf8') + '\n' +
-          readFileSync(resolve(root, 'src/styles/spinner.css'), 'utf8') + '\n' +
-          readFileSync(resolve(root, 'src/styles/loading-screen.css'), 'utf8');
-        const theme = '(' + applyThemePreference.toString() + ')((' + readStoredTheme.toString() + ')(' +
-          JSON.stringify(themeStorageKey) + '));';
+        const themes = themePreferences.filter(name => name !== 'system').map(name => 'themes/' + name + '.css');
+        const styles = [...themes, 'app.css', 'spinner.css', 'loading-screen.css']
+          .map(file => readFileSync(resolve(root, 'src/styles', file), 'utf8')).join('\n');
+        const theme = '{ const apply = (' + applyThemePreference.toString() + ');' +
+          'apply((' + readStoredTheme.toString() + ')(' + JSON.stringify(themeStorageKey) + ',' +
+          JSON.stringify(themePreferences) + '));' +
+          '(' + watchSystemTheme.toString() + ')(apply); }';
         const startupLanguage = 'document.documentElement.lang = (' + readStartupLanguage.toString() + ')(' +
           JSON.stringify(languageStorageKey) + ');';
         const label = 'document.getElementById("bootstrap-screen").setAttribute("aria-label", ' +

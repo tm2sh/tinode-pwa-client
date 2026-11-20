@@ -60,8 +60,11 @@ function placeMenu(dialog: HTMLDialogElement, panel: HTMLElement, highlight: HTM
   const bottomEdge = bottomBoundary?.getBoundingClientRect().top ?? bottom;
   const visibleTop = Math.max(top, target.top, topEdge);
   const visibleBottom = Math.min(bottom, target.bottom, bottomEdge);
-  const visibleLeft = Math.max(left, target.left);
-  const visibleRight = Math.min(right, target.right);
+  const anchorStyle = getComputedStyle(anchor);
+  const overflowLeft = parseFloat(anchorStyle.getPropertyValue('--anchored-action-overflow-left')) || 0;
+  const overflowRight = parseFloat(anchorStyle.getPropertyValue('--anchored-action-overflow-right')) || 0;
+  const visibleLeft = Math.max(left, target.left - overflowLeft);
+  const visibleRight = Math.min(right, target.right + overflowRight);
   if (visibleBottom <= visibleTop || visibleRight <= visibleLeft || right - left <= margin * 2) return false;
 
   Object.assign(highlight.style, {

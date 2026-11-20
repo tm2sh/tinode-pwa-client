@@ -25,17 +25,18 @@
   width: 24px;
   height: 24px;
   margin: 0;
-  border: 1px solid var(--settings-muted);
+  border: 1px solid var(--selection-edge, var(--settings-muted));
+  background: var(--selection-background, transparent);
   border-radius: 50%;
   cursor: inherit;
 }
-.settings-person-check input:checked { border-color: var(--settings-accent); background: var(--settings-accent); }
+.settings-person-check input:checked { border-color: var(--selection-edge, var(--settings-accent)); background: var(--settings-accent); }
 .settings-person-check input:disabled { opacity: .5; }
 .settings-person-check svg {
   position: absolute;
   width: 16px;
   height: 16px;
-  color: light-dark(white, #19273b);
+  color: var(--selection-icon);
   stroke: currentColor;
   stroke-width: 2;
   pointer-events: none;

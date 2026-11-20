@@ -1,34 +1,27 @@
 :root {
+  --glass-background: var(--glass-highlight-layer), var(--glass-fill);
   --chat-header-control-size: 58px;
   --chat-header-gutter: 13px;
   --chat-header-left: calc(env(safe-area-inset-left, 0px) + var(--chat-header-gutter));
   --chat-header-right: calc(env(safe-area-inset-right, 0px) + var(--chat-header-gutter));
   --chat-header-top: calc(env(safe-area-inset-top, 0px) + 4px);
-  --chat-header-scrim: linear-gradient(to bottom, light-dark(#12253a33, #00000057),
-    light-dark(#12253a1a, #0000002e) 40%, light-dark(#12253a08, #0000000f) 75%, transparent);
-  color-scheme: light dark;
+  --chat-header-scrim: linear-gradient(to bottom, var(--scrim-strong),
+    var(--scrim-medium) 40%, var(--scrim-soft) 75%, transparent);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  color: light-dark(#19273b, #f0f5fc);
-  background-color: light-dark(#e9eff7, #101c2c);
-  background-image:
-    radial-gradient(ellipse at 100% 5%, light-dark(#ffe4d2e0, #71463980), transparent 38%),
-    radial-gradient(ellipse at 109% 54%, light-dark(#90c8f5c7, #145d8bcc), transparent 58%),
-    radial-gradient(ellipse at -10% 93%, light-dark(#cab4f8cc, #5b397a99), transparent 53%),
-    radial-gradient(ellipse at 0% 27%, light-dark(#e8f8fc, #244a5e88), transparent 58%);
+  color: var(--text-primary);
+  background-color: var(--canvas-background);
+  background-image: var(--canvas-image);
   background-attachment: fixed;
 }
 
 @media (max-width: 420px) {
   :root { --chat-header-gutter: 10px; }
 }
-
-:root[data-theme="light"] { color-scheme: light; }
-:root[data-theme="dark"] { color-scheme: dark; }
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }

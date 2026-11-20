@@ -13,12 +13,12 @@
   font-size: 14px;
 }
 .add-contact-feedback .auth-spinner { flex: none; }
-.add-contact-feedback.is-error { color: light-dark(#a32e48, #ffb4c3); }
+.add-contact-feedback.is-error { color: var(--error-text); }
 .add-contact-feedback button {
   border: 0;
   background: none;
   padding: 8px;
-  color: var(--conversation-accent, light-dark(#087af5, #8ac4ff));
+  color: var(--conversation-accent, var(--accent-text));
   font: inherit;
   font-weight: 600;
 }

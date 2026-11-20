@@ -69,7 +69,7 @@ export function createConversationPresenter(options: { readonly language: 'ru' |
     }
     const items = Object.freeze(values.map((message, index): ConversationMessageView => {
       const before = sameSeries(index - 1, index), after = sameSeries(index, index + 1);
-      const showSender = kind === 'group' && message.sender.state !== 'self' && !before;
+      const showSender = kind === 'group' && message.sender.state !== 'self';
       const date = times[index];
       const separator = index === 0 || days[index] !== days[index - 1];
       const editedAt = message.versionSeq === undefined ? undefined : normalizeServerTimestamp(message.editedAt);
@@ -80,7 +80,7 @@ export function createConversationPresenter(options: { readonly language: 'ru' |
       });
       return Object.freeze({ key: message.serverSeq, message, side: message.sender.state === 'self' ? 'outgoing' : 'incoming',
         series: before ? after ? 'middle' : 'last' : after ? 'first' : 'single',
-        showSenderName: showSender, showSenderAvatar: showSender, ...(edited === undefined ? {} : { edited }),
+        showSenderName: showSender && !before, showSenderAvatar: showSender && !after, ...(edited === undefined ? {} : { edited }),
         ...(separator ? { dateSeparator: Object.freeze(date === undefined ? { state: 'unknown' } as const
           : { state: 'known', key: days[index]!, text: dateLabel.format(date) } as const) } : {}),
         time: Object.freeze(date === undefined ? { state: 'unknown' } as const

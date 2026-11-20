@@ -11,7 +11,7 @@
 }
 .chat-info-screen::-webkit-scrollbar { display: none; width: 0; height: 0; }
 .chat-info-screen button { appearance: none; -webkit-appearance: none; font: inherit; outline: none; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
-.chat-info-retry, .chat-info-add-member { border: 1px solid var(--settings-edge); background: var(--settings-glass); box-shadow: var(--settings-shadow); -webkit-backdrop-filter: blur(42px) saturate(1.7); backdrop-filter: blur(42px) saturate(1.7); }
+.chat-info-retry, .chat-info-add-member { border: 1px solid var(--glass-button-edge, var(--settings-edge)); background: var(--glass-button-background, var(--glass-background)); box-shadow: var(--glass-box-shadow); -webkit-backdrop-filter: blur(42px) saturate(1.7); backdrop-filter: blur(42px) saturate(1.7); }
 .chat-info-content { width: min(100%, 520px); margin: 0 auto; }
 .chat-info-hero { display: flex; flex-direction: column; align-items: center; min-width: 0; padding: 24px 0 28px; }
 .chat-info-presence { max-width: 100%; margin: 12px 0 0; text-align: center; color: var(--settings-muted); font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; }
@@ -22,7 +22,7 @@
 .chat-info-progress { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 24px 0 0; color: var(--settings-muted); font-size: 13px; }
 .chat-info-progress .auth-spinner { flex: none; color: var(--settings-accent); }
 .chat-info-error { margin: 24px 0 0; text-align: center; }
-.chat-info-error p { margin: 0; color: light-dark(#a32e48, #ffb4c3); font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
+.chat-info-error p { margin: 0; color: var(--error-text); font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
 .chat-info-retry, .chat-info-add-member { min-height: 48px; margin-top: 14px; padding: 12px 22px; border-radius: 24px; color: var(--settings-accent); cursor: pointer; }
 .chat-info-empty { margin: 32px 0; text-align: center; color: var(--settings-muted); font-size: 14px; }
 @media (display-mode: standalone) { .chat-info-screen { height: var(--settings-editor-viewport-height, 100vh); } }
@@ -43,7 +43,7 @@
 .chat-info-screen .chat-info-remove-member {
   display: grid; place-items: center; inline-size: 44px; min-height: 44px; margin-inline-end: -8px;
   padding: 0; border: 0; border-radius: 14px; background: transparent;
-  color: light-dark(#000, #fff); cursor: pointer;
+  color: var(--icon-ink); cursor: pointer;
 }
 .chat-info-remove-member svg {
   width: 20px; height: 20px; stroke: currentColor; stroke-width: 1.7;
@@ -53,7 +53,7 @@
 .chat-info-remove-dialog {
   width: min(340px, calc(100% - 36px)); max-width: none; box-sizing: border-box; padding: 0;
   border: 1px solid var(--settings-edge); border-radius: 24px;
-  background: var(--settings-glass); box-shadow: var(--settings-shadow);
+  background: var(--glass-background); box-shadow: var(--glass-box-shadow);
   color: var(--settings-ink); -webkit-backdrop-filter: blur(42px); backdrop-filter: blur(42px);
 }
 .chat-info-remove-dialog::backdrop { background: rgb(0 0 0 / .4); }
@@ -61,8 +61,8 @@
 .chat-info-remove-title { margin: 0; font-size: 17px; line-height: 1.4; overflow-wrap: anywhere; }
 .chat-info-remove-actions { display: flex; flex-wrap: wrap; justify-content: end; gap: 8px; margin-top: 16px; }
 .chat-info-screen .chat-info-remove-actions button {
-  min-height: 44px; padding: 8px 14px; border: 1px solid var(--settings-edge); border-radius: 18px;
-  background: var(--settings-glass); color: var(--settings-ink); cursor: pointer;
+  min-height: 44px; padding: 8px 14px; border: 1px solid var(--glass-button-edge, var(--settings-edge)); border-radius: 18px;
+  background: var(--glass-button-background, var(--glass-background)); color: var(--settings-ink); cursor: pointer;
 }
-.chat-info-screen .chat-info-remove-actions .is-destructive { color: light-dark(#a32e48, #ffb4c3); }
+.chat-info-screen .chat-info-remove-actions .is-destructive { color: var(--error-text); }
 .chat-info-remove-actions button:disabled { opacity: .55; cursor: default; }

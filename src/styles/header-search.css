@@ -1,12 +1,10 @@
 .header-glass-button, .header-glass-pill {
   --search-size: var(--chat-header-control-size);
-  --search-muted: var(--conversation-muted, light-dark(#65758a, #a8bad0));
+  --search-muted: var(--conversation-muted, var(--text-secondary));
   height: var(--search-size);
-  border: 1px solid var(--conversation-edge, light-dark(#ffffffce, #e6f3ff3b));
-  box-shadow: var(--conversation-shadow, 0 8px 24px light-dark(#2549730c, #00000022),
-    inset 0 1px 1px light-dark(#ffffffed, #ffffff38), inset 0 -1px 1px light-dark(#aec3d322, #00000022));
-  background: var(--conversation-highlight, linear-gradient(150deg, light-dark(#ffffff45, #ffffff0e), transparent 65%)),
-    var(--conversation-fill, light-dark(#f4f8ff30, #162c405c));
+  border: 1px solid var(--glass-button-edge, var(--conversation-edge, var(--glass-edge)));
+  box-shadow: var(--glass-box-shadow);
+  background: var(--glass-button-background, var(--glass-background));
   -webkit-backdrop-filter: var(--conversation-filter, blur(42px) saturate(1.7));
   backdrop-filter: var(--conversation-filter, blur(42px) saturate(1.7));
 }
@@ -27,5 +25,5 @@ button.header-glass-button:disabled { cursor: default; }
   .header-search-field { gap: 8px; padding-inline-end: 9px; }
 }
 @media (hover: hover) and (pointer: fine) {
-  .header-glass-button:focus-visible { outline: 2px solid var(--conversation-accent, light-dark(#087af5, #8ac4ff)); outline-offset: 2px; }
+  .header-glass-button:focus-visible { outline: 2px solid var(--conversation-accent, var(--accent-text)); outline-offset: 2px; }
 }

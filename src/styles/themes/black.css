@@ -1,0 +1,127 @@
+:root[data-palette="black"] {
+  color-scheme: dark;
+  accent-color: var(--accent-text);
+
+  /* Shared colors */
+  --error-text: #ffb4c3;
+  --accent-text: #eeeeee;
+  --text-secondary: #b5b5b5;
+  --glass-edge: #ffffff26;
+  --glass-button-edge: var(--glass-edge);
+  --glass-background: var(--glass-fill);
+  --glass-box-shadow: 0 8px 24px #00000050;
+  --action-background: #41414186;
+  --scrim-strong: #00000057;
+  --scrim-medium: #0000002e;
+  --scrim-soft: #0000000f;
+  --text-primary: #f2f2f2;
+
+  /* App canvas */
+  --canvas-background: #000;
+  --canvas-image: none;
+
+  /* Controls and panels */
+  --panel-background: #242424d6;
+  --panel-button-background: #242424ab;
+  --field-divider: #ffffff20;
+  --error-edge: #ff99ac40;
+  --error-background: #79384c33;
+  --error-stripe: #ff99ac;
+  --icon-ink: #fff;
+
+  /* Chat cards */
+  --chat-card-edge: var(--glass-edge);
+  --chat-card-background: #ffffff19;
+  --chat-card-box-shadow: 0 6px 16px #0000000a;
+  --chat-card-muted: #b5b5b5;
+  --chat-preview-text: #e4e4e4;
+  --unread-muted-text: #d0d0d0;
+  --unread-muted-background: #323232;
+  --unread-muted-edge: transparent;
+  --unread-unknown-text: #b0b0b0;
+  --chat-error-edge: #ff99ac66;
+
+  /* Dialogs and menus */
+  --chat-selection-background: linear-gradient(var(--chat-card-background) 0 0), var(--canvas-background);
+  --confirmation-muted: var(--text-secondary);
+  --menu-backdrop: #00000073;
+  --menu-edge: var(--glass-edge);
+  --menu-background: linear-gradient(var(--glass-fill) 0 0), var(--canvas-background);
+  --menu-box-shadow: var(--glass-box-shadow);
+  --menu-divider: var(--field-divider);
+  --danger-text: #ff9ba7;
+  --menu-hover: #ffffff14;
+
+  /* Conversation and settings */
+  --glass-fill: #6a6a6a55;
+  --glass-button-background: #6a6a6a44;
+  --composer-glass-background: linear-gradient(180deg, #7c7c8052 0%, #6a6a7047 24%, #66666e3d 65%, #76767c4d 100%);
+  --composer-glass-ink: #fafafa;
+  --composer-glass-placeholder: #929292;
+  --composer-glass-shadow: 0 calc(var(--chat-header-control-size) / 40) calc(var(--chat-header-control-size) / 10) #0008;
+  --composer-rim-unit: calc(var(--chat-header-control-size) / 120);
+  --composer-rim-mask: linear-gradient(180deg, #000 10%, transparent 42% 58%, #000 90%);
+  --composer-rim-shadow:
+    inset 0 var(--composer-rim-unit) 0 #ffffff22,
+    inset 0 calc(var(--composer-rim-unit) * -1) 0 #ffffff22,
+    inset 0 calc(var(--composer-rim-unit) * 2) 0 #ffffff1a,
+    inset 0 calc(var(--composer-rim-unit) * -2) 0 #ffffff1a,
+    inset 0 calc(var(--composer-rim-unit) * 3) 0 #ffffff1d,
+    inset 0 calc(var(--composer-rim-unit) * -3) 0 #ffffff1d,
+    inset 0 calc(var(--composer-rim-unit) * 4) 0 #ffffff12,
+    inset 0 calc(var(--composer-rim-unit) * -4) 0 #ffffff12,
+    inset 0 calc(var(--composer-rim-unit) * 9) calc(var(--composer-rim-unit) * 12) calc(var(--composer-rim-unit) * -8) #ffffff18,
+    inset 0 calc(var(--composer-rim-unit) * -9) calc(var(--composer-rim-unit) * 12) calc(var(--composer-rim-unit) * -8) #ffffff18;
+  --message-fill: #232323;
+  --message-own-fill: #363636;
+  --message-edge: transparent;
+  --glass-highlight-layer: none;
+  --date-fill: #ffffff1b;
+  --date-edge: transparent;
+  --author-0-text: #dddddd;
+  --author-1-text: #dddddd;
+  --author-2-text: #dddddd;
+  --author-3-text: #dddddd;
+  --code-fill: #ffffff1f;
+  --highlight-fill: #ffffff30;
+  --attachment-fill: #ffffff15;
+  --readonly-shadow: #00000099;
+  --inline-error-fill: #341f2fee;
+  --delivery-text: #b9b9b9;
+  --read-text: #f3f3f3;
+  --search-hit-fill: #ffffff45;
+  --menu-selected-message: var(--message-fill);
+  --menu-selected-own-message: var(--message-own-fill);
+  --feedback-background: #2a2a2af5;
+  --selection-icon: #141414;
+  --selection-background: #474747;
+  --selection-edge: var(--glass-edge);
+  --danger-soft: #ff9eae;
+  --switch-off: #ffffff40;
+  --list-divider: #ffffff1c;
+  --wave-fill: #ddd;
+
+  /* Avatar, unread and media accents */
+  --avatar-fill: #454545;
+  --avatar-edge: var(--glass-edge);
+  --avatar-border: 1px solid var(--avatar-edge);
+  --avatar-box-shadow: none;
+  --chat-avatar-fill: #454545;
+  --chat-avatar-shadow: none;
+  --unread-background: #565656;
+  --unread-edge: transparent;
+  --unread-shadow: none;
+  --unread-muted-shadow: none;
+  --unread-text-shadow: none;
+  --author-0-fill: #505050;
+  --author-1-fill: #454545;
+  --author-2-fill: #585858;
+  --author-3-fill: #3d3d3d;
+  --unread-jump-fill: #5c5c5c;
+  --media-overlay: #111111f2;
+  --play-background: #515151cc;
+  --play-shadow: 0 4px 10px #00000037;
+  --media-control-edge: transparent;
+  --media-overlay-control-edge: transparent;
+  --media-overlay-button-background: #ffffff12;
+}

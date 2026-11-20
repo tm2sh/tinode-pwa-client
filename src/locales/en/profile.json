@@ -9,7 +9,10 @@
       "title": "Theme",
       "system": "System",
       "dark": "Dark",
-      "light": "Light"
+      "light": "Light",
+      "black": "Black",
+      "white": "White",
+      "blue": "Blue"
     },
     "language": {
       "title": "Interface language",

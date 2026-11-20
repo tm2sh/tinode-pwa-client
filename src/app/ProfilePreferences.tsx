@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { changeAppLanguage } from '../i18n';
 import type { AppLanguage } from '../i18n/language-preference';
 import { AppIcon } from './AppIcon';
-import { getThemePreference, setThemePreference } from './theme-preference';
+import { getThemePreference, setThemePreference, themePreferences } from './theme-preference';
 import type { ThemePreference } from './theme-preference';
 
 interface PreferenceListProps<Value extends string> {
@@ -66,11 +66,7 @@ export function ProfilePreferences() {
 
   return <div className="profile-preferences">
     <PreferenceList<ThemePreference> title={t($ => $.appearance.theme.title)} selected={theme} onSelect={selectTheme}
-      options={[
-        { value: 'system', label: t($ => $.appearance.theme.system) },
-        { value: 'dark', label: t($ => $.appearance.theme.dark) },
-        { value: 'light', label: t($ => $.appearance.theme.light) },
-      ]} />
+      options={themePreferences.map(value => ({ value, label: t($ => $.appearance.theme[value]) }))} />
     <div>
       <PreferenceList<AppLanguage> title={t($ => $.appearance.language.title)}
         selected={i18n.language === 'ru' ? 'ru' : 'en'} pending={pending} listRef={languageList}

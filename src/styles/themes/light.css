@@ -1,0 +1,102 @@
+:root {
+  color-scheme: light;
+
+  /* Shared colors */
+  --error-text: #a32e48;
+  --accent-text: #087af5;
+  --text-secondary: #65758a;
+  --glass-edge: #ffffffce;
+  --action-background: #c4e1ff99;
+  --glass-box-shadow: 0 8px 24px #2549730c, inset 0 1px 1px #ffffffed, inset 0 -1px 1px #aec3d322;
+  --scrim-strong: #12253a33;
+  --scrim-medium: #12253a1a;
+  --scrim-soft: #12253a08;
+  --text-primary: #19273b;
+
+  /* App canvas */
+  --canvas-background: #e9eff7;
+  --canvas-image: radial-gradient(ellipse at 100% 5%, var(--canvas-warm), transparent 38%),
+    radial-gradient(ellipse at 109% 54%, var(--canvas-blue), transparent 58%),
+    radial-gradient(ellipse at -10% 93%, var(--canvas-violet), transparent 53%),
+    radial-gradient(ellipse at 0% 27%, var(--canvas-soft), transparent 58%);
+  --canvas-warm: #ffe4d2e0;
+  --canvas-blue: #90c8f5c7;
+  --canvas-violet: #cab4f8cc;
+  --canvas-soft: #e8f8fc;
+
+  /* Controls and panels */
+  --panel-background: #ffffff8c;
+  --field-divider: #526c8b1a;
+  --error-edge: #bc3a5533;
+  --error-background: #fff1f3b3;
+  --error-stripe: #bc3a55;
+  --icon-ink: #000;
+
+  /* Chat cards */
+  --chat-card-edge: #ffffffc7;
+  --chat-card-background: linear-gradient(125deg, #ffffff8f, #ffffff50);
+  --chat-card-box-shadow: inset 0 1px 1px #ffffff, inset 0 -1px 1px #0000000d, 0 6px 16px #0000000a;
+  --chat-card-muted: #66768b;
+  --chat-preview-text: #415166;
+  --unread-muted-text: #52677e;
+  --unread-muted-background: #d5e4f2;
+  --unread-muted-edge: #ffffff90;
+  --unread-unknown-text: #68717e;
+  --chat-error-edge: #bc3a5552;
+
+  /* Dialogs and menus */
+  --chat-selection-background: linear-gradient(125deg, #f9fbff, #e9eff8);
+  --confirmation-muted: #4c6079;
+  --menu-backdrop: #17243e39;
+  --menu-edge: #ffffffed;
+  --menu-background: linear-gradient(145deg, #ffffff80, transparent 62%), #edf6fee8;
+  --menu-box-shadow: 0 10px 30px #243a6350, inset 0 1px 1px #ffffff58;
+  --menu-divider: #586b842a;
+  --danger-text: #b52234;
+  --menu-hover: #3d679515;
+
+  /* Conversation and settings */
+  --glass-fill: #f4f8ff30;
+  --message-own-fill: #bddcfd30;
+  --glass-highlight-layer: linear-gradient(150deg, #ffffff45, transparent 65%);
+  --date-fill: #ffffff61;
+  --date-edge: #ffffff8c;
+  --author-0-text: #b56a31;
+  --author-1-text: #4779bb;
+  --author-2-text: #8770ad;
+  --author-3-text: #1e806e;
+  --code-fill: #4779bb12;
+  --highlight-fill: #ffeb9d;
+  --attachment-fill: #d3e6ff33;
+  --readonly-shadow: #ffffff99;
+  --inline-error-fill: #fff5f6ee;
+  --delivery-text: #435c74;
+  --read-text: #155487;
+  --search-hit-fill: #ffe086;
+  --menu-selected-message: #edf6fc;
+  --menu-selected-own-message: #d1e7fc;
+  --feedback-background: #f7fbfff5;
+  --selection-icon: white;
+  --danger-soft: #b9334b;
+  --switch-off: #a0aabc66;
+  --list-divider: #697e9826;
+  --wave-fill: #2888ee;
+
+  /* Avatar, unread and media accents */
+  --avatar-fill: linear-gradient(145deg, #9abffa, #7b9be8 50%, #ad9ad9);
+  --chat-avatar-fill: linear-gradient(150deg, #8ec8ff, #3a9cf8 65%, #4280ef);
+  --chat-avatar-shadow: inset 0 2px 3px #ffffff78, 0 3px 7px #3b83c323;
+  --unread-background: radial-gradient(ellipse at 95% 0%, #ffab4a, transparent 75%), linear-gradient(150deg, #ff6c62 20%, #c4b4f6 95%);
+  --unread-shadow: inset 0 1px 2px #ffffffe0, 0 2px 9px #ea776326;
+  --unread-text-shadow: 0 1px 2px #a1535555;
+  --author-0-fill: linear-gradient(145deg, #edb464, #dc864b);
+  --author-1-fill: linear-gradient(145deg, #7ca8e6, #547db8);
+  --author-2-fill: linear-gradient(145deg, #af9bda, #8b79bc);
+  --author-3-fill: linear-gradient(145deg, #80cabb, #339a87);
+  --unread-jump-fill: #087af5;
+  --media-overlay: #090b10f2;
+  --play-background: linear-gradient(145deg, #5dafff, #1688ff 55%, #0874ec);
+  --play-shadow: 0 4px 10px #0b70dc25, inset 0 1px 2px #ffffff8c;
+  --media-control-edge: #ffffff6b;
+  --media-overlay-control-edge: #ffffff55;
+}

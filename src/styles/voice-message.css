@@ -2,7 +2,7 @@
 
 .conversation-voice-message { min-width: 0; margin-top: 3px; }
 .conversation-voice { display: flex; align-items: center; gap: 10px; min-width: 0; width: 190px; max-width: 100%; padding: 1px 0; }
-.conversation-voice .conversation-voice-play { display: grid; place-items: center; flex: none; width: 41px; height: 41px; padding: 0; border-radius: 50%; background: linear-gradient(145deg, #5dafff, #1688ff 55%, #0874ec); color: #fff; border: 1px solid #ffffff6b; box-shadow: 0 4px 10px #0b70dc25, inset 0 1px 2px #ffffff8c; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.conversation-voice .conversation-voice-play { display: grid; place-items: center; flex: none; width: 41px; height: 41px; padding: 0; border-radius: 50%; background: var(--play-background); color: var(--play-icon, #fff); border: 1px solid var(--glass-button-edge, var(--media-control-edge)); box-shadow: var(--play-shadow); cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 .conversation-voice-play > svg { display: block; width: 19px; height: 19px; fill: currentColor; }
 .conversation-voice-play > svg.auth-spinner { fill: none; }
 .conversation-voice-play:disabled { opacity: .45; cursor: default; }
@@ -10,7 +10,7 @@
 @media (hover: none) { .conversation-voice-play:focus-visible { outline: none; } }
 .conversation-voice-track { flex: 1; min-width: 0; }
 .conversation-voice-wave { display: flex; align-items: center; height: 22px; gap: 2px; }
-.conversation-voice-wave > span { width: 3px; flex: 1; min-width: 0; border-radius: 3px; background: var(--conversation-accent, light-dark(#2888ee, #8dc7ff)); opacity: .5; }
+.conversation-voice-wave > span { width: 3px; flex: 1; min-width: 0; border-radius: 3px; background: var(--conversation-accent, var(--wave-fill)); opacity: .5; }
 .conversation-voice-wave > span[data-active="true"] { opacity: 1; }
 .conversation-voice-duration { color: var(--conversation-muted); font-size: 11px; font-variant-numeric: tabular-nums; line-height: 1.3; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .conversation-voice-error { display: block; max-width: 220px; color: var(--conversation-muted); font-size: 11px; line-height: 1.35; margin-top: 6px; overflow-wrap: anywhere; }

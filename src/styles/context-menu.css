@@ -5,15 +5,15 @@
   padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
   color: var(--action-menu-ink, inherit); background: transparent;
 }
-.anchored-action-dialog::backdrop { background: light-dark(#17243e39, #030a165e); }
+.anchored-action-dialog::backdrop { background: var(--menu-backdrop); }
 .anchored-action-outside { position: absolute; inset: 0; touch-action: none; }
 .anchored-action-highlight { position: absolute; pointer-events: none; }
 .anchored-action-panel {
   position: absolute; box-sizing: border-box; width: 223px; border-radius: 23px; outline: none;
-  border: 1px solid light-dark(#ffffffed, #a7c5e64d);
-  background: linear-gradient(145deg, light-dark(#ffffff80, #ffffff21), transparent 62%), light-dark(#edf6fee8, #2b3c50eb);
+  border: 1px solid var(--menu-edge);
+  background: var(--menu-background);
   -webkit-backdrop-filter: blur(28px) saturate(1.7); backdrop-filter: blur(28px) saturate(1.7);
-  box-shadow: 0 10px 30px light-dark(#243a6350, #0509168f), inset 0 1px 1px #ffffff58;
+  box-shadow: var(--menu-box-shadow);
   overflow: auto; overscroll-behavior: contain; touch-action: pan-y; scrollbar-width: none;
 }
 .anchored-action-panel::-webkit-scrollbar { display: none; }
@@ -22,11 +22,11 @@
   width: 100%; min-height: 46px; padding: 7px 14px; border: 0; color: inherit; background: transparent; font: 500 15px system-ui;
   appearance: none; cursor: pointer; -webkit-tap-highlight-color: transparent;
 }
-.anchored-action-panel button + button { border-top: 1px solid light-dark(#586b842a, #c6daff27); }
-.anchored-action-panel button.anchored-action-danger { color: light-dark(#b52234, #ff9ba7); }
+.anchored-action-panel button + button { border-top: 1px solid var(--menu-divider); }
+.anchored-action-panel button.anchored-action-danger { color: var(--danger-text); }
 .anchored-action-panel button:disabled { opacity: .55; cursor: default; }
-.anchored-action-panel button:enabled:hover { background: light-dark(#3d679515, #ffffff12); }
+.anchored-action-panel button:enabled:hover { background: var(--menu-hover); }
 @media (hover: hover) and (pointer: fine) {
-  .anchored-action-dialog .anchored-action-panel button:focus-visible { outline: 2px solid var(--action-menu-accent, light-dark(#087af5, #8ac4ff)); outline-offset: -3px; border-radius: 8px; }
+  .anchored-action-dialog .anchored-action-panel button:focus-visible { outline: 2px solid var(--action-menu-accent, var(--accent-text)); outline-offset: -3px; border-radius: 8px; }
 }
 .anchored-action-panel svg { width: 19px; height: 19px; flex: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }

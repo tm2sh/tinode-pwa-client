@@ -1,10 +1,20 @@
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useSyncExternalStore } from 'react';
 import { AppIcon } from '../../app/AppIcon';
+import type { ComponentProps } from 'react';
 import { VoiceRecorder } from '../../media/VoiceRecorder';
 import { VoiceCapturePopup } from './VoiceCapturePopup';
 import { useTranslation } from 'react-i18next';
 import type { ConversationController } from '../ConversationController';
 import type { ConversationComposerState } from '../conversation-types';
+
+function ComposerIcon(props: ComponentProps<typeof AppIcon>) {
+  const variant = props.name === 'attachment' ? 'attachment-glass'
+    : props.name === 'microphone' ? 'microphone-glass' : undefined;
+  return <>
+    <AppIcon {...props} className={[variant ? 'conversation-composer-icon-default' : '', props.className].filter(Boolean).join(' ') || undefined} />
+    {variant && <AppIcon name={variant} size={props.size} className="conversation-composer-icon-glass" />}
+  </>;
+}
 
 export function Composer({ controller, state, writable, active = true, onReconnect }: { readonly controller: ConversationController;
   readonly state?: ConversationComposerState; readonly writable: boolean; readonly active?: boolean; readonly onReconnect?: () => Promise<void> }) {
@@ -96,7 +106,7 @@ export function Composer({ controller, state, writable, active = true, onReconne
           else if (capturing) recorder.cancel();
           else photoInput.current?.click();
         }}>
-        <AppIcon name={edit || capturing ? 'close' : 'attachment'} />
+        <ComposerIcon name={edit || capturing ? 'close' : 'attachment'} />
       </button>
       <div className="conversation-message-field">{capturing ? <div className="conversation-capture-status" role="status">
         <span className={capture.phase === 'recording' ? 'conversation-recording-dot' : undefined} aria-hidden="true" />
@@ -125,7 +135,7 @@ export function Composer({ controller, state, writable, active = true, onReconne
         onClick={() => { if (edit) return;
           if (capture.phase === 'recording') void recorder.stop().then(() => { if (!canSendNewMessage()) { recorder.cancel(); return; } const file = recorder.takeRecording(); if (file) void controller.submitVoice(file); }); else if (capture.phase === 'ready') sendVoice();
           else if (!hasText && !blocked && canSendNewMessage()) void recorder.start(); }}>
-        <AppIcon name={savingEdit || checkingEdit ? 'spinner' : edit ? 'send' : capture.phase === 'finalizing' || capture.phase === 'requesting'
+        <ComposerIcon name={savingEdit || checkingEdit ? 'spinner' : edit ? 'send' : capture.phase === 'finalizing' || capture.phase === 'requesting'
           ? 'recording-pending' : hasText || capture.phase === 'ready' || capture.phase === 'recording'
             ? 'send' : 'microphone'} className={savingEdit || checkingEdit ? 'auth-spinner' : undefined} />
       </button>

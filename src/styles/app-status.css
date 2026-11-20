@@ -20,7 +20,7 @@
 .app-status-content { flex: none; width: min(100%, 380px); margin: auto; padding: 24px 0; }
 .app-status-heading { margin-bottom: 32px; text-align: center; }
 .app-status-heading h1 { margin: 0; font-size: clamp(26px, 7vw, 32px); font-weight: 650; letter-spacing: -0.7px; }
-.app-status-heading p { margin: 9px 0 0; color: light-dark(#65758a, #a8bad0); font-size: 14px; }
+.app-status-heading p { margin: 9px 0 0; color: var(--text-secondary); font-size: 14px; }
 .app-status-button {
   appearance: none;
   -webkit-appearance: none;
@@ -31,13 +31,11 @@
   min-height: 58px;
   margin-top: 20px;
   padding: 13px 17px;
-  border: 1px solid light-dark(#ffffffce, #e6f3ff3b);
+  border: 1px solid var(--glass-button-edge, var(--glass-edge));
   border-radius: 29px;
-  color: light-dark(#087af5, #8ac4ff);
-  background: light-dark(#c4e1ff99, #365e83b3);
-  box-shadow: 0 8px 24px light-dark(#2549730c, #00000022),
-    inset 0 1px 1px light-dark(#ffffffed, #ffffff38),
-    inset 0 -1px 1px light-dark(#aec3d322, #00000022);
+  color: var(--accent-text);
+  background: var(--action-background);
+  box-shadow: var(--glass-box-shadow);
   -webkit-backdrop-filter: blur(42px);
   backdrop-filter: blur(42px);
   font-size: 15px;
@@ -48,5 +46,5 @@
   touch-action: manipulation;
 }
 @media (hover: hover) and (pointer: fine) {
-  .app-status-button:focus-visible { outline: 2px solid light-dark(#087af5, #8ac4ff); outline-offset: 3px; }
+  .app-status-button:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 3px; }
 }

@@ -1,7 +1,7 @@
 import iconSprite from '../assets/ui-icons.svg?no-inline';
 
 type AppIconName = 'spinner' | 'back' | 'logout' | 'eye' | 'eye-off' | 'search' |
-  'plus' | 'close' | 'close-wide' | 'attachment' | 'microphone' | 'recording-pending' | 'send' |
+  'plus' | 'close' | 'close-wide' | 'attachment' | 'microphone' | 'attachment-glass' | 'microphone-glass' | 'recording-pending' | 'send' |
   'down' | 'up' | 'photo' | 'file' | 'error' | 'play' | 'pause' | 'bell' | 'muted' | 'copy' | 'link' | 'edit' | 'trash' | 'check' | 'double-check';
 
 interface AppIconProps {

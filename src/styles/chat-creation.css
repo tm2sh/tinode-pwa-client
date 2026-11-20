@@ -24,4 +24,4 @@
 
 .chat-creation-feedback { display: flex; align-items: center; gap: 8px; margin: 0 17px 12px; color: var(--settings-muted); font-size: 14px; }
 .chat-creation-feedback .auth-spinner { flex: none; }
-.chat-creation-feedback.is-error { color: light-dark(#a32e48, #ffb4c3); }
+.chat-creation-feedback.is-error { color: var(--error-text); }

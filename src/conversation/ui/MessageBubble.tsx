@@ -119,7 +119,7 @@ export function OutgoingBubble({ row, retryDisabled, onRetry, releasePreview, lo
           ? <AppIcon name="spinner" className="auth-spinner" />
           : <AppIcon name="error" />}</span>
       </button>}
-      <article className="conversation-bubble" aria-label={t($ => $.fallback.self)}>
+      <article className="conversation-bubble" data-tail="outgoing" aria-label={t($ => $.fallback.self)}>
         {photo && preview && <img ref={image} className="conversation-outgoing-preview" src={preview}
           alt={photo.filename || mediaT($ => $.photo)} draggable={false} />}
         {photo ? <div className="conversation-attachment conversation-outgoing-photo">
@@ -175,6 +175,7 @@ export function MessageBubble({ item, loadPreview, onOpenPhoto, loadVoice, voice
         {item.showSenderAvatar && <ChatAvatar name={author} avatar={message.sender.state === 'other' ? message.sender.avatar : { state: 'unavailable' }} />}
       </span>}
       <article className={activeSearchMatch ? "conversation-bubble conversation-search-current" : "conversation-bubble"}
+        data-tail={item.series === 'single' || item.series === 'last' ? item.side : undefined}
         data-message-action-seq={message.delivery === 'serverConfirmed' ? item.key : undefined}
         tabIndex={message.delivery === 'serverConfirmed' ? 0 : undefined}
         aria-keyshortcuts={message.delivery === 'serverConfirmed' ? 'ContextMenu Shift+F10' : undefined}

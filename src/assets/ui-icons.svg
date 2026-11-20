@@ -34,6 +34,13 @@
   <symbol id="attachment" viewBox="0 0 24 24">
     <path d="m21 11-9 9a6 6 0 0 1-8.5-8.5L13 2a4 4 0 0 1 5.7 5.7L9 17.4a2 2 0 0 1-2.8-2.8L15 5.8"/>
   </symbol>
+  <symbol id="attachment-glass" viewBox="0 0 80 80" stroke-width="5">
+    <path d="M65 49 48 66C39 75 23 75 14 64 8 57 8 45 15 36L43 8C49 5 59 6 64 13 68 19 66 29 60 35L39 56C35 60 28 61 24 55 21 51 23 46 27 43L43 27"/>
+  </symbol>
+  <symbol id="microphone-glass" viewBox="0 0 80 80" stroke-width="4.8">
+    <rect x="27" y="4" width="26" height="50" rx="13"/>
+    <path d="M15 39v2c0 14 11 24 25 24s25-10 25-24v-2M40 65v13"/>
+  </symbol>
   <symbol id="microphone" viewBox="0 0 24 24">
     <rect x="9" y="2" width="6" height="12" rx="3"/>
     <path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/>
