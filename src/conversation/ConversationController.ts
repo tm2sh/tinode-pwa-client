@@ -220,7 +220,7 @@ export class ConversationController {
   #localVoiceResources = new MediaResources();
   readonly #voiceFiles = new Map<string, PreparedVoice>();
   readonly #localVoiceSources = new WeakMap<VoiceMedia, PreparedVoice>();
-  readonly #localPhotoPreviews = new Map<string, AvatarImageSource>();
+  readonly #localPhotoPreviews = new Map<string, Set<AvatarImageSource>>();
   readonly #photoReads = new Set<AbortController>();
   #previewQueue: Promise<unknown> = Promise.resolve();
   #reconcile: ReconcileWork | undefined;
@@ -677,65 +677,63 @@ export class ConversationController {
       this.#ready?.permissions.canWrite.state === 'allowed' && this.#ready.permissions.canRead.state === 'allowed';
   }
   async #sendPhotoBatch(files: File[], port: ConversationPort, batch: AbortController): Promise<void> {
+    const operationId = crypto.randomUUID();
+    const photos: { filename: string; preview?: AvatarImageSource; width?: number; height?: number }[] = files.map(file => ({ filename: file.name }));
+    const row: Submission = { operationId, photo: Object.freeze({ filename: files[0]!.name,
+      ...(files.length > 1 ? { photos: Object.freeze(photos.map(photo => Object.freeze({ ...photo }))) } : {}) }),
+      operation: Object.freeze({ identity: this.identity, revision: 0, operationId, kind: 'photo', phase: 'preparing' }) };
+    this.#submissions.set(operationId, row);
+    this.#scrollRevision++; this.#scrollTarget = 'latest';
+    this.#syncOutgoing(); this.#publishReady({});
     try {
-      const { preparePhoto, PhotoPreparationFailure } = await import('../media/PhotoPreparation');
-      const inlineLimit = port.mediaLimits().maxInlineMediaSize;
-      for (const file of files) {
-        if (!this.#canSendPhotos(port, batch)) break;
-        const operationId = crypto.randomUUID();
-        const row: Submission = { operationId, photo: Object.freeze({ filename: file.name }),
-          operation: Object.freeze({ identity: this.identity, revision: 0, operationId, kind: 'photo', phase: 'preparing' }) };
-        this.#submissions.set(operationId, row);
-        this.#scrollRevision++; this.#scrollTarget = 'latest';
-        this.#syncOutgoing(); this.#publishReady({});
-        try {
-          const prepared = await preparePhoto(file, batch.signal, inlineLimit?.state === 'known' ? inlineLimit.value : undefined);
-          if (!this.#canSendPhotos(port, batch)) break;
-          let preview: AvatarImageSource | undefined;
-          if (prepared.preview) {
-            const bytes = Uint8Array.from(atob(prepared.preview), char => char.charCodeAt(0));
-            preview = URL.createObjectURL(new Blob([bytes], { type: prepared.blob.type })) as AvatarImageSource;
-            this.#localPhotoPreviews.set(operationId, preview);
-          }
-          row.photo = Object.freeze({ filename: prepared.filename, uploadProgress: 0, ...(preview ? { preview } : {}) });
-          this.#syncOutgoing(); this.#publishReady({});
-          const result = await port.sendPreparedMedia(operationId, createPreparedMedia(this.identity, prepared), batch.signal, fraction => {
-            if (!this.#canSendPhotos(port, batch) || row.operation.phase !== 'preparing') return;
-            row.photo = Object.freeze({ ...row.photo!, uploadProgress: fraction });
-            this.#syncOutgoing(); this.#publishReady({});
-          });
-          if (this.#photoBatch === batch && this.#port === port && this.#canRun() && this.#snapshot.phase === 'ready') {
-            this.#acceptOutgoing(result);
-          }
-        } catch (reason: unknown) {
-          if (this.#photoBatch !== batch || this.#port !== port || !this.#canRun() || this.#snapshot.phase !== 'ready') break;
-          if (batch.signal.aborted && row.operation.phase === 'preparing') break;
-          const error: ConversationError = reason instanceof ConversationFailure
-            ? Object.freeze({ ...copyError(reason.conversationError), area: 'send' })
-            : Object.freeze({ area: 'send', kind: reason instanceof PhotoPreparationFailure && reason.reason === 'tooLarge' ? 'tooLarge' : 'unsupported',
-              messageCode: reason instanceof PhotoPreparationFailure ? reason.messageCode : 'conversationPhotoPreparationFailed', retryable: false });
-          this.#acceptOutgoing(row.operation.phase === 'publishing'
-            ? Object.freeze({ ...row.operation, phase: 'unknown', messageCode: 'conversationSendUnknown' })
-            : Object.freeze({ ...row.operation, phase: 'rejected', error }));
+      const { preparePhotoAlbum } = await import('../media/PhotoAlbumPreparation');
+      const prepared = await preparePhotoAlbum(files, port.mediaLimits(), batch.signal, (index, photo) => {
+        if (!this.#canSendPhotos(port, batch)) return;
+        let preview: AvatarImageSource | undefined;
+        if (photo.preview && index < 4) {
+          const bytes = Uint8Array.from(atob(photo.preview), char => char.charCodeAt(0));
+          preview = URL.createObjectURL(new Blob([bytes], { type: photo.blob.type })) as AvatarImageSource;
+          let owned = this.#localPhotoPreviews.get(operationId);
+          if (!owned) this.#localPhotoPreviews.set(operationId, owned = new Set());
+          owned.add(preview);
         }
-      }
-    } catch {
-      if (this.#canSendPhotos(port, batch)) this.#composerError = Object.freeze({ area: 'send', kind: 'unsupported',
-        messageCode: 'conversationPhotoPreparationFailed', retryable: false });
+        photos[index] = { filename: photo.filename, width: photo.width, height: photo.height, ...(preview ? { preview } : {}) };
+        row.photo = Object.freeze({ filename: photos[0]!.filename,
+          ...(files.length === 1 ? (preview ? { preview } : {})
+            : { photos: Object.freeze(photos.map(item => Object.freeze({ ...item }))) }) });
+        this.#syncOutgoing(); this.#publishReady({});
+      });
+      if (!this.#canSendPhotos(port, batch)) return;
+      const result = await port.sendPreparedMedia(operationId, createPreparedMedia(this.identity, prepared), batch.signal, fraction => {
+        if (!this.#canSendPhotos(port, batch) || row.operation.phase !== 'preparing') return;
+        row.photo = Object.freeze({ ...row.photo!, uploadProgress: fraction });
+        this.#syncOutgoing(); this.#publishReady({});
+      });
+      if (this.#photoBatch === batch && this.#port === port && this.#canRun() && this.#snapshot.phase === 'ready') this.#acceptOutgoing(result);
+    } catch (reason: unknown) {
+      if (this.#photoBatch !== batch || this.#port !== port || !this.#canRun() || this.#snapshot.phase !== 'ready' || batch.signal.aborted) return;
+      const error: ConversationError = reason instanceof ConversationFailure
+        ? Object.freeze({ ...copyError(reason.conversationError), area: 'send' })
+        : Object.freeze({ area: 'send', kind: reason instanceof MediaFailure && reason.reason === 'tooLarge' ? 'tooLarge' : 'unsupported',
+          messageCode: reason instanceof MediaFailure && reason.reason === 'tooLarge' ? 'conversationMediaTooLarge'
+            : reason instanceof MediaFailure && reason.reason === 'unsupported' ? 'conversationMediaUnsupported' : 'conversationPhotoPreparationFailed', retryable: false });
+      this.#acceptOutgoing(row.operation.phase === 'publishing'
+        ? Object.freeze({ ...row.operation, phase: 'unknown', messageCode: 'conversationSendUnknown' })
+        : Object.freeze({ ...row.operation, phase: 'rejected', error }));
     } finally {
       if (this.#photoBatch === batch) {
         this.#photoBatch = undefined;
-        for (const [id, row] of this.#submissions) {
-          if (row.operation.kind === 'photo' && row.operation.phase === 'preparing') this.#submissions.delete(id);
-        }
+        for (const [id, item] of this.#submissions) if (item.operation.kind === 'photo' && item.operation.phase === 'preparing') this.#submissions.delete(id);
         this.#syncOutgoing();
         if (this.#canRun() && this.#ready) this.#publishReady({});
       }
     }
   }
   readonly releaseLocalPhotoPreview = (operationId: string, preview: string): void => {
-    if (this.#localPhotoPreviews.get(operationId) !== preview) return;
-    this.#localPhotoPreviews.delete(operationId);
+    const owned = this.#localPhotoPreviews.get(operationId);
+    if (!owned?.has(preview as AvatarImageSource)) return;
+    owned.delete(preview as AvatarImageSource);
+    if (!owned.size) this.#localPhotoPreviews.delete(operationId);
     URL.revokeObjectURL(preview);
   };
   readonly acquirePhoto = async (photo: PhotoAttachment, signal: AbortSignal): Promise<MediaLease> => {
@@ -1453,7 +1451,7 @@ export class ConversationController {
     const reconcile = this.#reconcile; this.#reconcile = undefined; reconcile?.abort.abort(); reconcile?.resolve(); this.#verification = undefined;
     const submission = this.#submission; this.#submission = undefined; submission?.abort.abort(); submission?.resolve();
     this.#photoBatch?.abort(); this.#photoBatch = undefined;
-    for (const preview of this.#localPhotoPreviews.values()) URL.revokeObjectURL(preview);
+    for (const owned of this.#localPhotoPreviews.values()) for (const preview of owned) URL.revokeObjectURL(preview);
     this.#localPhotoPreviews.clear();
     for (const read of this.#photoReads) read.abort();
     this.#photoReads.clear();

@@ -35,5 +35,11 @@
     "sizeLimit": "Запись завершена. Отправляем голосовое…",
     "popupTitle": "Запись недоступна",
     "closePopup": "Закрыть"
-  }
+  },
+  "photoCount": "{{count}} фото",
+  "albumPhoto": "Открыть фото {{current}} из {{total}}",
+  "albumMore": "Ещё {{count}} фото",
+  "photoPosition": "{{current}} из {{total}}",
+  "previousPhoto": "Предыдущее фото",
+  "nextPhoto": "Следующее фото"
 }

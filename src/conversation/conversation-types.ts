@@ -466,7 +466,8 @@ export interface ConversationOutgoing {
   readonly text?: string;
   readonly submittedDraftIds?: readonly string[];
   readonly voice?: { readonly attachment: VoiceAttachment; readonly canRetry: boolean; readonly uploadProgress?: number };
-  readonly photo?: { readonly filename: string; readonly uploadProgress?: number; readonly preview?: AvatarImageSource };
+  readonly photo?: { readonly filename: string; readonly uploadProgress?: number; readonly preview?: AvatarImageSource;
+    readonly photos?: readonly { readonly filename: string; readonly preview?: AvatarImageSource; readonly width?: number; readonly height?: number }[] };
   readonly reconcileCursor?: ConversationReconcileCursor;
 }
 export interface ConversationEditDraft {

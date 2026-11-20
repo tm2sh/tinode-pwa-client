@@ -128,7 +128,7 @@ export interface TinodeConversationSubscription {
   deleteMessages(seqs: readonly number[], hard: boolean): Promise<TinodeDeleteResult>;
   prepareText(operationId: string, text: string): TinodePublication;
   prepareEdit(operationId: string, targetSeq: number, input: TinodeEditPayload): TinodePublication;
-  prepareMedia(operationId: string, content: TinodeDraftyMediaContent, reference?: string): TinodePublication;
+  prepareMedia(operationId: string, content: TinodeDraftyMediaContent, references?: readonly string[]): TinodePublication;
   note(what: 'read' | 'recv', seq: number): void;
   dispose(): void;
 }
@@ -495,8 +495,8 @@ export class TinodeSessionScope {
         return this.#preparePublication(consumer, operationId, input.content, input.references,
           { ...input.metadata, replace: ':' + targetSeq });
       },
-      prepareMedia: (operationId: string, content: TinodeDraftyMediaContent, reference?: string) =>
-        this.#preparePublication(consumer, operationId, content, reference === undefined ? undefined : [reference]),
+      prepareMedia: (operationId: string, content: TinodeDraftyMediaContent, references?: readonly string[]) =>
+        this.#preparePublication(consumer, operationId, content, references),
       note: (what: 'read' | 'recv', seq: number) => {
         if (!this.active || !this.#sdk || this.#conversation !== consumer || consumer.lifetime.signal.aborted) throw new TinodeSessionFailure('closed');
         if ((what !== 'read' && what !== 'recv') || !isInteger(seq, 1)) throw new TinodeSessionFailure('invalidResponse');

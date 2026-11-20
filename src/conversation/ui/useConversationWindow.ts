@@ -33,7 +33,12 @@ export function useConversationWindow(items: readonly ConversationMessageView[],
         const ratio = part.dimensions.state === 'known' ? Math.min(2, Math.max(1, part.dimensions.width / part.dimensions.height)) : 4 / 3;
         return sum + Math.min(236, available) / ratio + 8;
       }, 0);
-      const estimate = 47 + lines * 22 + (item.showSenderName ? 26 : 0) + (item.dateSeparator ? 38 : 0) + attachmentHeight;
+      const photos = item.message.content.attachments.filter(part => part.kind === 'photo');
+      const photoOnly = photos.length > 0 && photos.length === item.message.content.attachments.length;
+      const mediaHeight = photoOnly ? (photos.length > 1 ? Math.min(302, available) / (photos.length === 2 ? 1.24 : 1.07)
+        : Math.min(480, Math.min(302, available) / (photos[0]!.dimensions.state === 'known'
+          ? Math.min(4, Math.max(.25, photos[0]!.dimensions.width / photos[0]!.dimensions.height)) : 4 / 3))) + 8 : attachmentHeight;
+      const estimate = 47 + lines * 22 + (item.showSenderName ? 26 : 0) + (item.dateSeparator ? 38 : 0) + mediaHeight;
       values.push(values.at(-1)! + (heights.current.get(item.key) ?? estimate));
     }
     return values;

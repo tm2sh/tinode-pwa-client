@@ -118,17 +118,18 @@ export function ChatScreen({ controller, onBack, onReconnect, initialHeader, not
     if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
     setSelectedPhoto(undefined); setInfoAttempt(0); setInfo({ owner: controller, navigation });
   };
-  const [selectedPhoto, setSelectedPhoto] = useState<{ readonly photo: PhotoAttachment;
+  const [selectedPhoto, setSelectedPhoto] = useState<{ readonly photo: PhotoAttachment; readonly album?: readonly PhotoAttachment[];
     readonly trigger: HTMLButtonElement; readonly owner: ConversationController }>();
   const closePhoto = useCallback(() => setSelectedPhoto(undefined), []);
-  const openPhoto = (photo: PhotoAttachment, trigger: HTMLButtonElement) => {
+  const openPhoto = (photo: PhotoAttachment, trigger: HTMLButtonElement, album?: readonly PhotoAttachment[]) => {
     controller.setViewportActive(false);
-    setSelectedPhoto({ photo, trigger, owner: controller });
+    setSelectedPhoto({ photo, album, trigger, owner: controller });
   };
-  const selectedResourceId = selectedPhoto?.photo.media.state === 'available' ? selectedPhoto.photo.media.resourceId : undefined;
+  const selectedResources = new Set((selectedPhoto?.album ?? (selectedPhoto ? [selectedPhoto.photo] : []))
+    .flatMap(photo => photo.media.state === 'available' ? [photo.media.resourceId] : []));
   const photoVisible = selectedPhoto?.owner === controller && snapshot.phase === 'ready' &&
-    selectedResourceId !== undefined && snapshot.messages.some(message => message.content.attachments.some(part =>
-      part.kind === 'photo' && part.media.state === 'available' && part.media.resourceId === selectedResourceId));
+    selectedResources.size > 0 && snapshot.messages.some(message => message.content.attachments.some(part =>
+      part.kind === 'photo' && part.media.state === 'available' && selectedResources.has(part.media.resourceId)));
   useEffect(() => { if (selectedPhoto && !photoVisible) closePhoto(); }, [selectedPhoto, photoVisible, closePhoto]);
   const actionMessage = selectedAction?.owner === controller && !infoOpen && !photoVisible && snapshot.phase === 'ready' &&
     snapshot.permissions.canRead.state === 'allowed'
@@ -242,7 +243,7 @@ export function ChatScreen({ controller, onBack, onReconnect, initialHeader, not
         {t($ => $.messageActions[copyNotice.code])}
       </p>}
     {photoVisible && <PhotoDialog key={selectedPhoto.photo.media.state === 'available' ? selectedPhoto.photo.media.resourceId : ''}
-      controller={controller} photo={selectedPhoto.photo} returnFocus={selectedPhoto.trigger} onClose={closePhoto} />}
+      controller={controller} photo={selectedPhoto.photo} album={selectedPhoto.album} returnFocus={selectedPhoto.trigger} onClose={closePhoto} />}
   </section>
   {infoOpen && info && <ScreenBoundary resetKey={String(info.navigation.identity.panelGeneration) + ':' + infoAttempt}
     fallback={<ProtectedScreenFailure onBack={closeInfo} onRetry={() => setInfoAttempt(value => value + 1)} />}>

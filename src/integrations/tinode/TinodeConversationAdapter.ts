@@ -692,9 +692,9 @@ export class TinodeConversationAdapter implements ConversationPort {
     return this.#startPublication(operationId, prepared.file.kind, signal, async (key, subscription, lifetime) => {
       const { TinodeMediaTransport } = await import('./TinodeMediaTransport');
       this.#assertWritable(lifetime);
-      const { content, reference } = await TinodeMediaTransport.forScope(this.#scope).preparePublication(prepared.file, lifetime, onUploadProgress);
+      const { content, references } = await TinodeMediaTransport.forScope(this.#scope).preparePublication(prepared.file, lifetime, onUploadProgress);
       this.#assertWritable(lifetime);
-      return { request: subscription.prepareMedia(key, content, reference), content };
+      return { request: subscription.prepareMedia(key, content, references), content };
     });
   }
 

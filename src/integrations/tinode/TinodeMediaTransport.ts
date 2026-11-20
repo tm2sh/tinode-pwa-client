@@ -200,8 +200,26 @@ export class TinodeMediaTransport {
   }
 
   async preparePublication(file: PreparedMediaInput, signal: AbortSignal,
-    onProgress?: (fraction: number) => void): Promise<{ content: TinodeDraftyMediaContent; reference?: string }> {
+    onProgress?: (fraction: number) => void): Promise<{ content: TinodeDraftyMediaContent; references?: readonly string[] }> {
     if (signal.aborted) throw new MediaFailure('aborted');
+    if (file.kind === 'photo' && file.photos) {
+      if (file.photos.length < 2) throw new MediaFailure('invalidResponse');
+      const ent: TinodeDraftyMediaContent['ent'][number][] = [], references: string[] = [];
+      for (let index = 0; index < file.photos.length; index++) {
+        const part = await this.preparePublication(file.photos[index]!, signal,
+          fraction => onProgress?.((index + fraction) / file.photos!.length));
+        ent.push(part.content.ent[0]!);
+        if (part.references) references.push(...part.references);
+        onProgress?.((index + 1) / file.photos.length);
+      }
+      const content: TinodeDraftyMediaContent = { txt: ' '.repeat(ent.length),
+        fmt: ent.map((_, index) => ({ at: index, len: 1, key: index })), ent };
+      const limit = this.limits.maxMessageSize;
+      if (limit.state !== 'known' || new TextEncoder().encode(JSON.stringify(content)).byteLength > limit.value) {
+        throw new MediaFailure('tooLarge');
+      }
+      return { content, ...(references.length ? { references } : {}) };
+    }
     const { maxFileUploadSize, maxMessageSize, maxInlineMediaSize } = this.limits;
     const byteLimit = maxInlineMediaSize ?? maxFileUploadSize;
     if (byteLimit.state !== 'known' || maxMessageSize.state !== 'known') throw new TinodeSessionFailure('limitsUnavailable');
@@ -248,7 +266,7 @@ export class TinodeMediaTransport {
     }
     const reference = await this.#upload(new File([file.blob], filename, { type: mime }), signal, onProgress);
     data.ref = reference;
-    return { content, reference };
+    return { content, references: [reference] };
   }
 
   #upload(file: Blob, signal: AbortSignal, onProgress?: (fraction: number) => void): Promise<string> {

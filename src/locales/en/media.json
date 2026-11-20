@@ -35,5 +35,11 @@
     "sizeLimit": "Recording finished. Sending the voice message…",
     "popupTitle": "Recording unavailable",
     "closePopup": "Close"
-  }
+  },
+  "photoCount": "{{count}} photos",
+  "albumPhoto": "Open photo {{current}} of {{total}}",
+  "albumMore": "{{count}} more photos",
+  "photoPosition": "{{current}} of {{total}}",
+  "previousPhoto": "Previous photo",
+  "nextPhoto": "Next photo"
 }

@@ -1,10 +1,11 @@
-import { createElement, Fragment, useCallback, useEffect, useRef } from 'react';
+import { createElement, Fragment, useCallback } from 'react';
 import { AppIcon } from '../../app/AppIcon';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { ConversationController } from '../ConversationController';
 import type { OpenPhoto } from './PhotoPreview';
-import { PhotoIcon, PhotoPreview } from './PhotoPreview';
+import { PhotoPreview } from './PhotoPreview';
+import { PhotoAlbum, LocalPhotoAlbum } from './PhotoAlbum';
 import type { ConversationMessageView } from '../conversation-presenter';
 import type { ConversationOutgoingReadStatus } from '../conversation-read-status';
 import type { ConversationAttachment, ConversationText, ConversationOutgoingOperation, ConversationOutgoing, ConversationVerification, ConversationSearchRange } from '../conversation-types';
@@ -95,21 +96,6 @@ export function OutgoingBubble({ row, retryDisabled, onRetry, releasePreview, lo
   const checking = verification?.state === 'checking';
   const actionLabel = phase !== 'unknown' ? t($ => $.composer.retry) : reconnect ? t($ => $.state.reconnect)
     : checking ? t($ => $.composer.checking) : verification ? t($ => $.composer.checkAgain) : t($ => $.composer.check);
-  const progress = photo?.uploadProgress;
-  const preview = photo?.preview;
-  const image = useRef<HTMLImageElement>(null);
-  useEffect(() => {
-    if (!preview) return;
-    const element = image.current;
-    return () => {
-      // StrictMode replays effects while keeping the image mounted.
-      queueMicrotask(() => {
-        if (!element?.isConnected || element.getAttribute('src') !== preview) {
-          releasePreview(row.operation.operationId, preview);
-        }
-      });
-    };
-  }, [preview, row.operation.operationId, releasePreview]);
   return <li className={'conversation-item is-outgoing series-single conversation-local-message' + (canRetry ? ' has-send-error' : '')} data-outgoing-id={row.operation.operationId}>
     <div className="conversation-row">
       {canRetry && <button type="button" className="conversation-send-retry" disabled={retryDisabled}
@@ -119,17 +105,11 @@ export function OutgoingBubble({ row, retryDisabled, onRetry, releasePreview, lo
           ? <AppIcon name="spinner" className="auth-spinner" />
           : <AppIcon name="error" />}</span>
       </button>}
-      <article className="conversation-bubble" data-tail="outgoing" aria-label={t($ => $.fallback.self)}>
-        {photo && preview && <img ref={image} className="conversation-outgoing-preview" src={preview}
-          alt={photo.filename || mediaT($ => $.photo)} draggable={false} />}
-        {photo ? <div className="conversation-attachment conversation-outgoing-photo">
-          <PhotoIcon /><div><strong>{photo.filename || mediaT($ => $.photo)}</strong>
-            {phase === 'preparing' && (progress === undefined ? <small role="status">{mediaT($ => $.preparing)}</small>
-              : <><small>{mediaT($ => $.uploading)} · {Math.round(progress * 100)}%</small>
-                <progress max={1} value={progress} aria-label={mediaT($ => $.uploading)} /></>)}
-            {phase === 'publishing' && <small role="status">{mediaT($ => $.publishing)}</small>}
-          </div>
-        </div> : voice ? <>
+      <article className={"conversation-bubble" + (photo ? " has-photos" : "")} data-tail="outgoing" aria-label={t($ => $.fallback.self)}>
+        {photo ? <>
+          <LocalPhotoAlbum photos={photo.photos ?? [photo]} operationId={row.operation.operationId} release={releasePreview} />
+          {phase === 'preparing' || phase === 'publishing' ? <p className="conversation-album-pending" role="status">{phase === 'preparing' ? mediaT($ => $.preparing) : mediaT($ => $.publishing)}</p> : null}
+        </> : voice ? <>
           {voice.attachment.media.state === 'available' ? <VoiceMessage voice={voice.attachment} loadVoice={loadVoice} signal={voiceSignal} />
             : <span>{t($ => $.attachment.voice)}</span>}
 
@@ -159,8 +139,10 @@ interface MessageBubbleProps {
   readonly trailing?: ReactNode;
 }
 export function MessageBubble({ item, loadPreview, onOpenPhoto, loadVoice, voiceSignal, personal, peerName, position, total, onRef, leading, trailing, outgoing, readStatus, searchHits, activeSearchMatch }: MessageBubbleProps) {
-  const { t } = useTranslation('chat');
+  const { t } = useTranslation('chat'), { t: mediaT } = useTranslation('media');
   const { message } = item;
+  const photos = message.content.attachments.filter(part => part.kind === 'photo');
+  const photoMessage = photos.length > 0 && photos.length === message.content.attachments.length;
   const author = message.sender.state === 'self' ? t($ => $.fallback.self)
     : message.sender.state === 'other' && message.sender.displayName.state === 'known' ? message.sender.displayName.text
       : personal ? peerName : t($ => $.fallback.sender);
@@ -174,20 +156,22 @@ export function MessageBubble({ item, loadPreview, onOpenPhoto, loadVoice, voice
       {!personal && item.side === 'incoming' && <span className="conversation-sender-avatar" aria-hidden="true">
         {item.showSenderAvatar && <ChatAvatar name={author} avatar={message.sender.state === 'other' ? message.sender.avatar : { state: 'unavailable' }} />}
       </span>}
-      <article className={activeSearchMatch ? "conversation-bubble conversation-search-current" : "conversation-bubble"}
+      <article className={"conversation-bubble" + (activeSearchMatch ? " conversation-search-current" : "") + (photoMessage ? " has-photos" : "")}
         data-tail={item.series === 'single' || item.series === 'last' ? item.side : undefined}
         data-message-action-seq={message.delivery === 'serverConfirmed' ? item.key : undefined}
         tabIndex={message.delivery === 'serverConfirmed' ? 0 : undefined}
         aria-keyshortcuts={message.delivery === 'serverConfirmed' ? 'ContextMenu Shift+F10' : undefined}
         aria-label={t($ => $.a11y.message, { author, time })}>
         {item.showSenderName && <div className="conversation-author-name">{author}</div>}
-        {message.content.text.text && <div className="conversation-copy">{messageText(message.content.text, searchHits)}</div>}
-        {message.content.attachments.map((attachment, index) => attachment.kind === 'photo'
+        {!photoMessage && message.content.text.text && <div className="conversation-copy">{messageText(message.content.text, searchHits)}</div>}
+        {photoMessage ? <PhotoAlbum photos={photos} loadPreview={loadPreview} onOpen={onOpenPhoto} /> : message.content.attachments.map((attachment, index) => attachment.kind === 'photo'
           ? <PhotoPreview key={attachment.preview?.resourceId ?? attachment.media.state + index} photo={attachment} loadPreview={loadPreview} onOpen={onOpenPhoto} />
           : attachment.kind === 'voice' ? <VoiceMessage key={index} voice={attachment} loadVoice={loadVoice} signal={voiceSignal} />
             : <Fragment key={index}><Attachment attachment={attachment} /></Fragment>)}
+        {photoMessage && message.content.text.text && <div className="conversation-copy">{messageText(message.content.text, searchHits)}</div>}
         {!message.content.text.text && message.content.attachments.length === 0 && <div className="conversation-copy">{t($ => $.attachment.empty)}</div>}
         <div className="conversation-time">
+          {photoMessage && photos.length > 1 && <span className="conversation-photo-count">{mediaT($ => $.photoCount, { count: photos.length })}</span>}
           {outgoing && !readStatus && <OutgoingStatus operation={outgoing} />}
           {item.edited && <time className="conversation-edited" dateTime={item.edited.dateTime}>{t($ => $.time.edited, { when: item.edited.text })}</time>}
           <span className="conversation-timestamp">

@@ -55,7 +55,7 @@ declare module 'tinode-sdk' {
   // Public Tinode.createMessage/publishMessage; raw drafts stay inside SessionScope.
   export interface TinodeTextContent { readonly txt: string }
   export interface TinodeDraftyMediaContent extends TinodeTextContent {
-    readonly fmt: readonly { readonly at: 0; readonly len: 1; readonly key: 0 }[];
+    readonly fmt: readonly { readonly at: number; readonly len: 1; readonly key: number }[];
     readonly ent: readonly { readonly tp: 'IM' | 'AU'; readonly data: Readonly<Record<string, string | number>> }[];
   }
   export interface TinodeLargeFileHelper {

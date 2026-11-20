@@ -7,7 +7,7 @@ import type { PhotoAttachment } from '../conversation-types';
 
 type PreviewState = { readonly preview: NonNullable<PhotoAttachment['preview']> } &
   ({ readonly kind: 'error' } | { readonly kind: 'ready'; readonly url: string });
-export type OpenPhoto = (photo: PhotoAttachment, trigger: HTMLButtonElement) => void;
+export type OpenPhoto = (photo: PhotoAttachment, trigger: HTMLButtonElement, album?: readonly PhotoAttachment[]) => void;
 
 type LoadPreview = ConversationController['acquirePhotoPreview'];
 
@@ -15,7 +15,8 @@ export function PhotoIcon() {
   return <AppIcon name="photo" />;
 }
 
-export function PhotoPreview({ photo, loadPreview, onOpen }: { readonly photo: PhotoAttachment; readonly loadPreview: LoadPreview; readonly onOpen: OpenPhoto }) {
+export function PhotoPreview({ photo, loadPreview, onOpen, album, extra = 0 }: { readonly photo: PhotoAttachment; readonly loadPreview: LoadPreview; readonly onOpen: OpenPhoto;
+  readonly album?: readonly PhotoAttachment[]; readonly extra?: number }) {
   const { t } = useTranslation('media');
   const box = useRef<HTMLButtonElement>(null);
   const lease = useRef<MediaLease>(undefined);
@@ -54,8 +55,8 @@ export function PhotoPreview({ photo, loadPreview, onOpen }: { readonly photo: P
   }, [loadPreview, preview]);
   const label = photo.filename ?? t($ => $.photo);
   const ratio = photo.dimensions.state === 'known'
-    ? Math.min(2, Math.max(1, photo.dimensions.width / photo.dimensions.height)) : 4 / 3;
-  return <button ref={box} type="button" aria-label={t($ => $.openPhoto)} disabled={photo.media.state !== 'available'} onClick={event => onOpen(photo, event.currentTarget)} className={'conversation-photo' + (preview ? ' has-preview' : '')} style={preview ? { aspectRatio: ratio } : undefined}>
+    ? Math.min(4, Math.max(.25, photo.dimensions.width / photo.dimensions.height)) : 4 / 3;
+  return <button ref={box} type="button" aria-label={album && album.length > 1 ? t($ => $.albumPhoto, { current: album.indexOf(photo) + 1, total: album.length }) : t($ => $.openPhoto)} disabled={photo.media.state !== 'available' && !album?.some(part => part.media.state === 'available')} onClick={event => onOpen(photo, event.currentTarget, album)} className={'conversation-photo' + (preview ? ' has-preview' : '')} style={album && album.length > 1 ? undefined : { aspectRatio: ratio }}>
     {preview && state?.kind === 'ready' ? <img src={state.url} alt={label} decoding="async" onError={() => {
       lease.current?.release();
       lease.current = undefined;
@@ -65,5 +66,6 @@ export function PhotoPreview({ photo, loadPreview, onOpen }: { readonly photo: P
       <span>{label}</span>
       <small>{!preview ? t($ => $.previewMissing) : state?.kind === 'error' ? t($ => $.previewFailed) : t($ => $.previewLoading)}</small>
     </span>}
+    {extra > 0 && <span className="conversation-photo-more" aria-label={t($ => $.albumMore, { count: extra })}>+{extra}</span>}
   </button>;
 }
